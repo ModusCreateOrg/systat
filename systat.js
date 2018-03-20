@@ -21,18 +21,42 @@ const kbyte = (n) => {
 
 let sleep = 1;
 
+const status = {
+  lastpgpgin:  0,
+  lastpgpgout: 0,
+  lastpswpin:  0,
+  lastpswpout: 0
+};
 const updateVirtualMemory = () => {
-  const lines = fs.readFileSync('/proc/vmstat').split('\n'),
+  const file = fs.readFileSync('/proc/vmstat', 'utf8'),
+        lines = file.split('\n'),
         hash = {};
   for (const line of lines) {
     const [key, value] = line.split(' ');
-    hash[key] = value;
+    if (['pgpgin', 'pgpgout', 'pswpin', 'pswpout'].indexOf(key) !== -1) {
+      hash[key] = Number(value);
+    }
   }
   return hash;
 };
+
+const updateNetwork = async () => {
+  const interfaces = await si.networkInterfaces(),
+        info = []; 
+  for (const nterface of interfaces) {
+    const iface = nterface.iface;
+    if (nterface.mac && nterface.mac.length) {
+      const stats = await si.networkStats(iface);
+      if (stats.rx) {
+        info.push(stats);
+      }
+    }
+  }
+  return info;
+};
 // poll status/info (update status obj)
-const status = {};
 const updateStatus = async () => {
+  status.network = await updateNetwork();
   status.loadavg = os.loadavg();
   status.osinfo = await si.osInfo();
   status.currentLoad = await si.currentLoad();
@@ -43,12 +67,29 @@ const updateStatus = async () => {
   status.fileSystems = await si.fsSize();
   status.diskIO = await si.disksIO();
   status.fsStats = await si.fsStats();
-  status.if = await si.networkInterfaceDefault();
-  status.interfaces = await si.networkInterfaces();
-  status.network = await si.networkStats();
   if (fs.existsSync('/proc/vmstat')) {
     status.linux = true;
-    status.vmstats = updateVirtualMemory();
+    const vmstats = updateVirtualMemory(),
+          pgpgin = vmstats.pgpgin - (status.lastpgpgin || vmstats.pgpgin),
+          pgpgout = vmstats.pgpgout - (status.lastpgpgout || vmstats.pgpgout),
+          pswpin = vmstats.pswpin - (status.lastpswpin || vmstats.pswpin),
+          pswpout = vmstats.pswpout - (status.lastpswpout || vmstats.pswpout);
+
+    vmstats.aggregate = {
+      pgpgin:  vmstats.pgpgin,
+      pgpgout: vmstats.pgpgout,
+      pswpin:  vmstats.pswpin,
+      pswpout: vmstats.pswpout
+    };
+    status.lastpgpgin = vmstats.pgpgin;
+    status.lastpgpgout = vmstats.pgpgout;
+    status.lastpswpin = vmstats.pswpin;
+    status.lastpswpout = vmstats.pswpout;
+    vmstats.pgpgin = pgpgin;
+    vmstats.pgpgout = pgpgout;
+    vmstats.pswpin = pswpin;
+    vmstats.pswpout = pswpout;
+    status.vmstats = vmstats;
   }
 };
 
@@ -150,24 +191,25 @@ const printDisks = (row) => {
    */
 
   row++;
-  inverseLine(0, row++, `${'DISK'.padEnd(12)} ${'Size'.padStart(13)} ${'Used'.padStart(13)} ${'Capacity'.padStart(13)} Mount`);
+  inverseLine(0, row++, `${'DISK'.padEnd(40)} ${'Size'.padStart(13)} ${'Used'.padStart(13)} ${'Capacity'.padStart(13)} Mount`);
   for (const fs of fileSystems) {
     const size = (fs.size/1024/1024/1024).toLocaleString().padStart(12),
           used = (fs.used/1024/1024/1024).toLocaleString().padStart(12),
           capacity = (fs.use).toLocaleString().padStart(12);
-    normalLine(0, row++, `${fs.fs.padEnd(12)} ${size}G ${used}G ${capacity}% ${fs.mount}`);
+    normalLine(0, row++, `${fs.fs.padEnd(40)} ${size}G ${used}G ${capacity}% ${fs.mount}`);
   }
   return row;
 };
 
 const printNetwork = (row) => {
-  const iface = status.network,
-        name = iface.iface,
-        rx = kbyte(iface.rx_sec),
-        tx = kbyte(iface.rx_sec);
-
   inverseLine(0, row++, `${'NETWORK'.padEnd(16)} ${'RX/SEC'.padStart(17)} ${'TX/SEC'.padStart(17)}`);
-  normalLine(0, row++, `${name.padEnd(16)} ${rx.padStart(16)}K ${tx.padStart(16)}K`);
+  for (const iface of status.network) {
+    const name = iface.iface,
+          rx = kbyte(iface.rx_sec),
+          tx = kbyte(iface.rx_sec);
+
+    normalLine(0, row++, `${name.padEnd(16)} ${rx.padStart(16)}K ${tx.padStart(16)}K`);
+  }
   /*
    *  console.log(status.if);
    *  console.log(status.interfaces);
@@ -175,12 +217,16 @@ const printNetwork = (row) => {
   //  console.log(status.network);
   return row;
 };
+
+const abort = () => {
+  term.attr('inverse', false);
+  term.clear();
+  term.hideCursor(false);
+  process.exit(0);
+};
 const main = () => {
   process.on('SIGINT', () => {
-    term.attr('inverse', false);
-    term.clear();
-    term.hideCursor(false);
-    process.exit(0);
+    abort();
   });
   term.hideCursor(true);
   term.clear();
@@ -193,6 +239,15 @@ const main = () => {
     row = printMemory(row) + 1;
     row = printDisks(row) + 1;
     row = printNetwork(row);
+    //    console.log('\n\n\n');
+    //    console.log(status.vmstats);
+    //    console.log('\n\n\n');
+    //    console.log(await si.networkInterfaces());
+    //    console.log('\n\n\n');
+    //    console.log(await si.networkStats('enp0s31f6'));
+    //    console.log(await si.networkStats('lo'));
+    //    console.log('\n\n\n');
+    //    console.log(status.if, status.network);
     /*
      *    console.log('status.currentLoad', status.currentLoad.cpus.length, status.currentLoad.cpus[0]);
      *    delete status.currentLoad.cpus;
