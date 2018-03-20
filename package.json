@@ -1,0 +1,26 @@
+{
+  "name": "systat",
+  "version": "1.0.0",
+  "description": "System Status for Mac/Windows/Linux",
+  "main": "systat.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mschwartz/systat.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mschwartz/systat/issues"
+  },
+  "homepage": "https://github.com/mschwartz/systat#readme",
+  "dependencies": {
+    "blessed": "^0.1.81",
+    "moment": "^2.21.0",
+    "systeminformation": "^3.37.7",
+    "terminal-kit": "^1.15.0"
+  }
+}
