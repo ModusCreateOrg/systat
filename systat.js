@@ -173,6 +173,9 @@ const printMemory = (row) => {
 };
 
 const printDisks = (row) => {
+  if (!status.fileSystems || !status.fsStats) {
+    return row;
+  }
   let fileSystems = status.fileSystems,
       diskIO = status.diskIO,
       rio = format(diskIO.rIO_sec).padStart(15),
@@ -202,6 +205,9 @@ const printDisks = (row) => {
 };
 
 const printNetwork = (row) => {
+  if (!status.network) {
+    return row;
+  }
   inverseLine(0, row++, `${'NETWORK'.padEnd(16)} ${'RX/SEC'.padStart(17)} ${'TX/SEC'.padStart(17)}`);
   for (const iface of status.network) {
     const name = iface.iface,
