@@ -22,6 +22,8 @@
 #include <netinet/in_var.h>
 #include <unistd.h>
 
+#include <ncurses.h>
+
 struct CPUSAMPLE {
   uint64_t totalSystemTime;
   uint64_t totalUserTime;

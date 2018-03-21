@@ -10,7 +10,7 @@ $(OBJDIR)/%.o: %.cpp
 $(OBJ): systat.h
 
 systat: $(OBJ)
-	gcc -g -o systat $(OBJ)
+	gcc -g -o systat $(OBJ) -lncurses
 
 clean:
 	rm -f $(OBJ)
