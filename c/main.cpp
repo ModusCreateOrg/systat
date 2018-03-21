@@ -1,16 +1,14 @@
 #include "systat.h"
 
 int main(int ac, char *av[]) {
-  printf("Hello, world\n");
-  CPUSAMPLE s1, s2, result;
-  sample(&s1);
-  while (1) {
+  while (true) {
     sleep(1);
-    sample(&s2);
-    deltaSample(s1, s2, result);
-    s1 = s2;
-    result.print();
-    printNetwork();
+    console.moveTo(0,0);
+    processor.update();
+    processor.print();
+    console.moveTo(2,0);
+    network.update();
+    network.print();
   }
   return 1;
 }

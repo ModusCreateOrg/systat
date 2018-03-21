@@ -22,30 +22,10 @@
 #include <netinet/in_var.h>
 #include <unistd.h>
 
-#include <ncurses.h>
+#include "Console.h"
+#include "Network.h"
+#include "Processor.h"
 
-struct CPUSAMPLE {
-  uint64_t totalSystemTime;
-  uint64_t totalUserTime;
-  uint64_t totalIdleTime;
-
-  void print() {
-    uint64_t total =
-        this->totalSystemTime + this->totalUserTime + this->totalIdleTime;
-
-    double onePercent = total / 100.0f;
-
-    printf("system: %5.2f\n",
-           (double)this->totalSystemTime / (double)onePercent);
-    printf("user:   %5.2f\n", (double)this->totalUserTime / (double)onePercent);
-    printf("idle:   %5.2f\n", (double)this->totalIdleTime / (double)onePercent);
-    printf("\n");
-    fflush(stdout);
-  }
-};
-
-extern void sample(CPUSAMPLE *sample);
-extern void deltaSample(CPUSAMPLE &s1, CPUSAMPLE &s2, CPUSAMPLE &result);
 extern void printNetwork();
 
 #endif

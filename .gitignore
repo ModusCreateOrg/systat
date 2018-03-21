@@ -2,3 +2,5 @@ node_modules
 o/
 *.o
 systat
+cmake-build*
+.idea

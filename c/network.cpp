@@ -1,40 +1,145 @@
 #include "systat.h"
+#include "Network.h"
 
-void printNetwork() {
-  printf("printing network\n");
-  int mib[] = { CTL_NET, PF_ROUTE, 0, 0, NET_RT_IFLIST2, 0 };
+Interface::Interface(std::string name, uint8_t *mac, if_msghdr2 *if2m) {
+  const if_data64 *data = &if2m->ifm_data;
+  this->name = name;
+  memcpy(this->mac, mac, 6);
+  this->type = data->ifi_type;
+  this->flags = if2m->ifm_flags;
+  this->speed = data->ifi_baudrate;
+  this->stats.packetsIn = this->statsDelta.packetsIn = data->ifi_ipackets;
+  this->stats.packetsOut = this->statsDelta.packetsOut = data->ifi_opackets;
+  this->stats.bytesIn = this->statsDelta.bytesIn = data->ifi_ibytes;
+  this->stats.bytesOut = this->statsDelta.bytesOut = data->ifi_obytes;
+}
+
+void Interface::update(if_data64 *data) {
+  this->statsDelta.packetsIn = data->ifi_ipackets - this->stats.packetsIn;
+  this->statsDelta.packetsOut = data->ifi_opackets - this->stats.packetsOut;
+  this->statsDelta.bytesIn = data->ifi_ibytes - this->stats.bytesIn;
+  this->statsDelta.bytesOut = data->ifi_obytes - this->stats.bytesOut;
+
+  this->stats.packetsIn = data->ifi_ipackets;
+  this->stats.packetsOut = data->ifi_opackets;
+  this->stats.bytesIn = data->ifi_ibytes;
+  this->stats.bytesOut = data->ifi_obytes;
+}
+
+void Interface::print() {
+  console.print("%-13s %13lld %13lld %13lld %13lld\n", this->name.c_str(), this->stats.packetsIn, this->stats.packetsOut, this->stats.bytesIn, this->stats.bytesOut);
+}
+
+Network::Network() {
+  int mib[] = {CTL_NET, PF_ROUTE, 0, 0, NET_RT_IFLIST2, 0};
   size_t len;
   if (sysctl(mib, 6, NULL, &len, NULL, 0) < 0) {
     fprintf(stderr, "sysctl: %s\n", strerror(errno));
     exit(1);
   }
-  char *buf = (char *)malloc(len);
+
+  char *buf = (char *) malloc(len);
   if (sysctl(mib, 6, buf, &len, NULL, 0) < 0) {
     fprintf(stderr, "sysctl: %s\n", strerror(errno));
     exit(1);
   }
+
   char *lim = buf + len;
-  char *next = NULL;
-  u_int64_t totalibytes = 0;
-  u_int64_t totalobytes = 0;
+  char *next = nullptr;
+
+  this->stats.bytesIn = 0;
+  this->stats.bytesOut = 0;
+  this->stats.packetsIn = 0;
+  this->stats.packetsOut = 0;
+
   for (next = buf; next < lim;) {
-    struct if_msghdr *ifm = (struct if_msghdr *)next;
+    struct if_msghdr *ifm = (struct if_msghdr *) next;
     next += ifm->ifm_msglen;
     if (ifm->ifm_type == RTM_IFINFO2) {
-      struct if_msghdr2 *if2m = (struct if_msghdr2 *)ifm;
+      struct if_msghdr2 *if2m = (struct if_msghdr2 *) ifm;
 
-      if(/*We want to count them all in top.*/ 1 ||
-        ((if2m->ifm_data.ifi_type != IFT_LOOP) /* do not count loopback traffic */
-         && !(if2m->ifm_data.ifi_type == IFT_PPP))) { /* or VPN/PPPoE */
-        struct sockaddr_dl *sdl = (struct sockaddr_dl *)(if2m + 1);
-        char name[32];
-        strncpy(name, sdl->sdl_data, sdl->sdl_nlen);
+      struct sockaddr_dl *sdl = (struct sockaddr_dl *) (if2m + 1);
+      char n[32];
+      strncpy(n, sdl->sdl_data, sdl->sdl_nlen);
+      n[sdl->sdl_nlen] = '\0';
+      std::string name(n);
 
-        printf("%-16s %16llu %16llu\n", name, if2m->ifm_data.ifi_ibytes, if2m->ifm_data.ifi_obytes);
-        totalibytes += if2m->ifm_data.ifi_ibytes;
-        totalobytes += if2m->ifm_data.ifi_obytes;
-      }
+      this->interfaces[name] = new Interface(name, (uint8_t *) &sdl->sdl_data[sdl->sdl_nlen], if2m);
+
+      this->stats.bytesIn += if2m->ifm_data.ifi_ibytes;
+      this->stats.bytesOut += if2m->ifm_data.ifi_obytes;
+      this->stats.packetsIn += if2m->ifm_data.ifi_ipackets;
+      this->stats.packetsOut += if2m->ifm_data.ifi_opackets;
     }
   }
-  printf("total ibytes %qu\tobytes %qu\n", totalibytes, totalobytes);
+  free(buf);
 }
+
+void Network::each(void (*f)(Interface *)) {
+  for (const auto& kv: this->interfaces) {
+    f(kv.second);
+  }
+};
+
+void Network::update() {
+  int mib[] = {CTL_NET, PF_ROUTE, 0, 0, NET_RT_IFLIST2, 0};
+  size_t len;
+  if (sysctl(mib, 6, NULL, &len, NULL, 0) < 0) {
+    fprintf(stderr, "sysctl: %s\n", strerror(errno));
+    exit(1);
+  }
+
+  char *buf = (char *) malloc(len);
+  if (sysctl(mib, 6, buf, &len, NULL, 0) < 0) {
+    fprintf(stderr, "sysctl: %s\n", strerror(errno));
+    exit(1);
+  }
+
+  char *lim = buf + len;
+  char *next = nullptr;
+
+  this->stats.bytesIn = 0;
+  this->stats.bytesOut = 0;
+  this->stats.packetsIn = 0;
+  this->stats.packetsOut = 0;
+
+  for (next = buf; next < lim;) {
+    struct if_msghdr *ifm = (struct if_msghdr *) next;
+    next += ifm->ifm_msglen;
+    if (ifm->ifm_type == RTM_IFINFO2) {
+      struct if_msghdr2 *if2m = (struct if_msghdr2 *) ifm;
+      struct sockaddr_dl *sdl = (struct sockaddr_dl *) (if2m + 1);
+      char n[32];
+      strncpy(n, sdl->sdl_data, sdl->sdl_nlen);
+      n[sdl->sdl_nlen] = '\0';
+      std::string name(n);
+
+      Interface *i = this->interfaces[name];
+      if (!i) {
+        printf("Shouldn't happen!\n");
+        return;
+      }
+      i->update(&if2m->ifm_data);
+
+//      printf("%-16s %16llu %16llu\n", name.c_str(), if2m->ifm_data.ifi_ibytes, if2m->ifm_data.ifi_obytes);
+      this->stats.bytesIn += if2m->ifm_data.ifi_ibytes;
+      this->stats.bytesOut += if2m->ifm_data.ifi_obytes;
+      this->stats.packetsIn += if2m->ifm_data.ifi_ipackets;
+      this->stats.packetsOut += if2m->ifm_data.ifi_opackets;
+    }
+  }
+  free(buf);
+}
+
+void Network::print() {
+  this->each([](Interface *i) {
+    if (i->flags & IFF_UP && i->stats.bytesIn) {
+      i->print();
+    }
+  });
+  printf("total ibytes %qu\tobytes %qu\n", this->stats.bytesIn, this->stats.bytesIn);
+}
+
+Network network;
+
+
