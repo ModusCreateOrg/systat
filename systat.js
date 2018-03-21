@@ -56,13 +56,13 @@ const updateNetwork = async () => {
 };
 // poll status/info (update status obj)
 const updateStatus = async () => {
-  status.network = await updateNetwork();
   status.loadavg = os.loadavg();
   status.osinfo = await si.osInfo();
-  status.currentLoad = await si.currentLoad();
   status.processes = await si.processes();
   status.cpu = await si.cpu();
   status.cpuCurrentSpeed = await si.cpuCurrentspeed();
+  status.currentLoad = await si.currentLoad();
+  status.network = await updateNetwork();
   status.mem = await si.mem();
   status.fileSystems = await si.fsSize();
   status.diskIO = await si.disksIO();
@@ -122,6 +122,9 @@ const printHeader = (row) => {
 };
 
 const printLoadAvg = (row) => {
+  if (!status.loadavg || !status.processes) {
+    return row;
+  }
   const loads = status.loadavg,
         procs = status.processes;
   normalLine(0,row++, `Load Average: ${format(loads[0])} ${format(loads[1])} ${format(loads[2])} Processes: ${procs.all} Running: ${procs.running}`);
@@ -129,6 +132,9 @@ const printLoadAvg = (row) => {
 };
 
 const printCPUs = (row) => {
+  if (!status.currentLoad || !status.cpu) {
+    return row;
+  }
   const load = status.currentLoad,
         cpu = status.cpu,
         cpus = load.cpus,
@@ -154,6 +160,9 @@ const printCPUs = (row) => {
 };
 
 const printMemory = (row) => {
+  if (!status.mem) {
+    return row;
+  }
   const mem = status.mem,
         total = kbyte(mem.total),
         free = kbyte(mem.free),
@@ -173,6 +182,9 @@ const printMemory = (row) => {
 };
 
 const printDisks = (row) => {
+  if (!status.fileSystem || !status.diskIO) {
+    return row;
+  }
   let fileSystems = status.fileSystems,
       diskIO = status.diskIO,
       rio = format(diskIO.rIO_sec).padStart(15),
@@ -202,6 +214,9 @@ const printDisks = (row) => {
 };
 
 const printNetwork = (row) => {
+  if (!status.network) {
+    return row;
+  }
   inverseLine(0, row++, `${'NETWORK'.padEnd(16)} ${'RX/SEC'.padStart(17)} ${'TX/SEC'.padStart(17)}`);
   for (const iface of status.network) {
     const name = iface.iface,
@@ -239,15 +254,17 @@ const main = () => {
     row = printMemory(row) + 1;
     row = printDisks(row) + 1;
     row = printNetwork(row);
-    //    console.log('\n\n\n');
-    //    console.log(status.vmstats);
-    //    console.log('\n\n\n');
-    //    console.log(await si.networkInterfaces());
-    //    console.log('\n\n\n');
-    //    console.log(await si.networkStats('enp0s31f6'));
-    //    console.log(await si.networkStats('lo'));
-    //    console.log('\n\n\n');
-    //    console.log(status.if, status.network);
+    /*
+     *    console.log('\n\n\n');
+     *    console.log(status.vmstats);
+     *    console.log('\n\n\n');
+     *    console.log(await si.networkInterfaces());
+     *    console.log('\n\n\n');
+     *    console.log(await si.networkStats('enp0s31f6'));
+     *    console.log(await si.networkStats('lo'));
+     *    console.log('\n\n\n');
+     *    console.log(status.if, status.network);
+     */
     /*
      *    console.log('status.currentLoad', status.currentLoad.cpus.length, status.currentLoad.cpus[0]);
      *    delete status.currentLoad.cpus;
