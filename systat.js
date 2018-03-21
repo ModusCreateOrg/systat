@@ -182,7 +182,7 @@ const printMemory = (row) => {
 };
 
 const printDisks = (row) => {
-  if (!status.fileSystem || !status.diskIO) {
+  if (!status.fileSystems || !status.fsStats) {
     return row;
   }
   let fileSystems = status.fileSystems,
