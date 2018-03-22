@@ -27,7 +27,7 @@ void Interface::update(if_data64 *data) {
 }
 
 void Interface::print() {
-  console.print("%-13s %13lld %13lld %13lld %13lld\n", this->name.c_str(), this->stats.packetsIn, this->stats.packetsOut, this->stats.bytesIn, this->stats.bytesOut);
+  console.print("%-10s %'13lld %'13lld %'13lld %'13lld\n", this->name.c_str(), this->stats.packetsIn/1024, this->stats.packetsOut/1024, this->stats.bytesIn/1024, this->stats.bytesOut/1024);
 }
 
 Network::Network() {
@@ -121,7 +121,6 @@ void Network::update() {
       }
       i->update(&if2m->ifm_data);
 
-//      printf("%-16s %16llu %16llu\n", name.c_str(), if2m->ifm_data.ifi_ibytes, if2m->ifm_data.ifi_obytes);
       this->stats.bytesIn += if2m->ifm_data.ifi_ibytes;
       this->stats.bytesOut += if2m->ifm_data.ifi_obytes;
       this->stats.packetsIn += if2m->ifm_data.ifi_ipackets;

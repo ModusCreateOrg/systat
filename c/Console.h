@@ -51,6 +51,7 @@ private:
   void set_mode(uint8_t attr, bool on);
 
 public:
+  void mode_clear();
   // turn on/off bold
   void mode_bold(bool on = true);
 

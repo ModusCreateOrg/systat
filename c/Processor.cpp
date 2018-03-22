@@ -25,10 +25,10 @@ void CPUStats::print() {
 
   double onePercent = total / 100.0f;
 
-  console.print("system: %5.2f ", (double) this->system / (double) onePercent);
-  console.print("user:   %5.2f ", (double) this->user / (double) onePercent);
-  console.print("nice:   %5.2f ", (double) this->nice/ (double) onePercent);
-  console.println("idle: %5.2f", (double) this->idle / (double) onePercent);
+  console.print("system: %'5.2f ", (double) this->system / (double) onePercent);
+  console.print("user:   %'5.2f ", (double) this->user / (double) onePercent);
+  console.print("nice:   %'5.2f ", (double) this->nice/ (double) onePercent);
+  console.println("idle: %'5.2f", (double) this->idle / (double) onePercent);
 }
 
 Processor::Processor() {

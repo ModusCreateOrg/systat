@@ -22,9 +22,14 @@
 #include <netinet/in_var.h>
 #include <unistd.h>
 
+#include <locale.h>
+#include <assert.h>
+
 #include "Console.h"
-#include "Network.h"
+#include "Platform.h"
 #include "Processor.h"
+#include "Memory.h"
+#include "Network.h"
 
 extern void printNetwork();
 

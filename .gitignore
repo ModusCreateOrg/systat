@@ -4,3 +4,7 @@ o/
 systat
 cmake-build*
 .idea
+CMakefiles/
+cmake_install.cmake
+*.cbp
+c

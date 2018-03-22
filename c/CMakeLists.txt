@@ -8,5 +8,5 @@ include_directories(.)
 add_executable(c
         Processor.cpp
         main.cpp
-        network.cpp
-        systat.h Network.h Console.cpp Console.h Processor.h)
+        Network.cpp
+        systat.h Network.h Console.cpp Console.h Processor.h Memory.cpp Memory.h Platform.cpp Platform.h)

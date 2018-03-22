@@ -55,9 +55,9 @@ void Console::showCursor(bool on) {
 
 /** @public **/
 void Console::clear() {
-  printf("%c[K", ESC);
+  printf("%c[2J", ESC);
   fflush(stdout);
-  this->row = this->col = 90;
+  this->row = this->col = 0;
 }
 
 /** @public **/
@@ -69,7 +69,7 @@ void Console::reset() {
 
 /** @public **/
 void Console::clear_eol() {
-  printf("%c[2J", ESC);
+  printf("%c[K", ESC);
   fflush(stdout);
 }
 
@@ -86,7 +86,7 @@ void Console::set_mode(uint8_t attr, bool on) {
   if (on) {
     printf("%c[%dm", ESC, attr);
   } else {
-    printf("%c[%dl", ESC, attr);
+    printf("%c[=%dl", ESC, attr);
   }
   fflush(stdout);
   switch (attr) {
@@ -109,6 +109,11 @@ void Console::set_mode(uint8_t attr, bool on) {
       this->concealed = on;
       break;
   }
+}
+
+void Console::mode_clear() {
+  this->set_mode(ATTR_OFF, true);
+  fflush(stdout);
 }
 
 /** @public **/
