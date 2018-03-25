@@ -7,4 +7,3 @@ cmake-build*
 CMakefiles/
 cmake_install.cmake
 *.cbp
-c
