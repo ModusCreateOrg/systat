@@ -1,6 +1,8 @@
 node_modules
 o/
 *.o
+*.a
+.depend
 systat
 cmake-build*
 .idea

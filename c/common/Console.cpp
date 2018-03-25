@@ -2,7 +2,17 @@
 // Created by Michael Schwartz on 3/21/18.
 //
 
-#include "systat.h"
+// General purpose console class
+
+#include "Console.h"
+#include <signal.h>
+#include <stdarg.h>
+#include <unistd.h>
+//#include <stdio.h>
+//#include <stdlib.h>
+//#include <string.h>
+//#include <sys/ioctl.h>
+//#include <sys/types.h>
 
 const char ESC = 0x1b;
 
@@ -36,6 +46,9 @@ void resize_handler(int sig) {
   if (sig == SIGWINCH) {
     console.resize();
   }
+  else {
+    printf("signal %d\n", sig);
+  }
 }
 
 Console::Console() {
@@ -54,7 +67,7 @@ Console::~Console() {
 
 void Console::resize() {
   struct winsize size;
-  ioctl(STDOUT_FILENO,TIOCGWINSZ,&size);
+  ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
   this->width = size.ws_col;
   this->height = size.ws_row;
   this->clear();
@@ -104,13 +117,15 @@ void Console::moveTo(uint8_t row, uint8_t col) {
 void Console::set_mode(uint8_t attr, bool on) {
   if (on) {
     printf("%c[%dm", ESC, attr);
-  } else {
+  }
+  else {
     printf("%c[=%dl", ESC, attr);
   }
   fflush(stdout);
   switch (attr) {
     case ATTR_OFF:
-      this->bold = this->underscore = this->blink = this->inverse = this->concealed = false;
+      this->bold = this->underscore = this->blink = this->inverse =
+          this->concealed = false;
       break;
     case ATTR_BOLD:
       this->bold = on;
@@ -136,35 +151,26 @@ void Console::mode_clear() {
 }
 
 /** @public **/
-void Console::mode_bold(bool on) {
-  this->set_mode(ATTR_BOLD, on);
-}
+void Console::mode_bold(bool on) { this->set_mode(ATTR_BOLD, on); }
 
 /** @public **/
-void Console::mode_underscore(bool on) {
-  this->set_mode(ATTR_UNDERSCORE, on);
-}
+void Console::mode_underscore(bool on) { this->set_mode(ATTR_UNDERSCORE, on); }
 
 /** @public **/
-void Console::mode_blink(bool on) {
-  this->set_mode(ATTR_BLINK, on);
-}
+void Console::mode_blink(bool on) { this->set_mode(ATTR_BLINK, on); }
 
 /** @public **/
-void Console::mode_inverse(bool on) {
-  this->set_mode(ATTR_INVERSE, on);
-}
+void Console::mode_inverse(bool on) { this->set_mode(ATTR_INVERSE, on); }
 
 /** @public **/
-void Console::mode_concealed(bool on) {
-  this->set_mode(ATTR_CONCEALED, on);
-}
+void Console::mode_concealed(bool on) { this->set_mode(ATTR_CONCEALED, on); }
 
 /** @private */
 void Console::set_color(uint8_t color, bool on) {
   if (on) {
     printf("%c[%dm", ESC, color);
-  } else {
+  }
+  else {
     printf("%c[%dl", ESC, color);
   }
   fflush(stdout);
@@ -318,5 +324,3 @@ void Console::newline() {
 }
 
 Console console;
-
-

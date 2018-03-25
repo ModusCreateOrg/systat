@@ -2,10 +2,14 @@
 // Created by Michael Schwartz on 3/21/18.
 //
 
+// GENERAL PURPOSE CONSOLE
+
 #ifndef C_CONSOLE_H
 #define C_CONSOLE_H
 
-#include <systat.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <sys/ioctl.h>
 
 class Console {
 private:
@@ -13,14 +17,11 @@ private:
   // ciuror location
   uint8_t row, col;
   // modes
-  bool bold,
-    underscore,
-    blink,
-    inverse,
-    concealed;
+  bool bold, underscore, blink, inverse, concealed;
   bool cursor_hidden;
   // colors
   uint8_t background, foreground;
+
 public:
   Console();
   ~Console();
@@ -100,4 +101,4 @@ public:
 
 extern Console console;
 
-#endif //C_CONSOLE_H
+#endif // C_CONSOLE_H
