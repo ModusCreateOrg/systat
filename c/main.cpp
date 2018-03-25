@@ -1,14 +1,17 @@
 #include "systat.h"
 
+#include <libproc.h>
+
 int main(int ac, char *av[]) {
   setlocale(LC_NUMERIC, "");
   while (true) {
     sleep(1);
     console.moveTo(0,0);
-    platform.print_header();
+    platform.update();
+    platform.print();
     processor.update();
     processor.print();
-    console.moveTo(2,0);
+    console.moveTo(4,0);
     network.update();
     network.print();
     memory.update();

@@ -31,13 +31,32 @@ const uint8_t BG_MAGENTA = 45;
 const uint8_t BG_CYAN = 46;
 const uint8_t BG_WHITE = 47;
 
+// window size/change handling
+void resize_handler(int sig) {
+  if (sig == SIGWINCH) {
+    console.resize();
+  }
+}
+
 Console::Console() {
+  this->resize();
   this->reset();
   this->clear();
+
+  // install sigwinch handler (window resize signal)
+  signal(SIGWINCH, resize_handler);
 }
 
 Console::~Console() {
   this->reset();
+  this->clear();
+}
+
+void Console::resize() {
+  struct winsize size;
+  ioctl(STDOUT_FILENO,TIOCGWINSZ,&size);
+  this->width = size.ws_col;
+  this->height = size.ws_row;
   this->clear();
 }
 
@@ -299,3 +318,5 @@ void Console::newline() {
 }
 
 Console console;
+
+

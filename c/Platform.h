@@ -8,12 +8,21 @@
 
 class Platform {
 public:
-  int cpu_count;
-  char hostname[256];
+  int  cpu_count;
+  int num_processes;
+  double loadavg[3];
+  char *hostname,
+       *sysname,
+       *release,
+       *version,
+       *machine;
+  kinfo_proc *kp;
 public:
   Platform();
+
 public:
-  void print_header();
+  void update();
+  void print();
 };
 
 extern Platform platform;

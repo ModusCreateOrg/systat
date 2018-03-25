@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named c
+# Target rules for targets named systat
 
 # Build rule for target.
-c : cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 c
-.PHONY : c
+systat: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 systat
+.PHONY : systat
 
 # fast build rule for target.
-c/fast:
-	$(MAKE) -f CMakeFiles/c.dir/build.make CMakeFiles/c.dir/build
-.PHONY : c/fast
+systat/fast:
+	$(MAKE) -f CMakeFiles/systat.dir/build.make CMakeFiles/systat.dir/build
+.PHONY : systat/fast
 
 Console.o: Console.cpp.o
 
@@ -129,7 +129,7 @@ Console.o: Console.cpp.o
 
 # target to build an object file
 Console.cpp.o:
-	$(MAKE) -f CMakeFiles/c.dir/build.make CMakeFiles/c.dir/Console.cpp.o
+	$(MAKE) -f CMakeFiles/systat.dir/build.make CMakeFiles/systat.dir/Console.cpp.o
 .PHONY : Console.cpp.o
 
 Console.i: Console.cpp.i
@@ -138,7 +138,7 @@ Console.i: Console.cpp.i
 
 # target to preprocess a source file
 Console.cpp.i:
-	$(MAKE) -f CMakeFiles/c.dir/build.make CMakeFiles/c.dir/Console.cpp.i
+	$(MAKE) -f CMakeFiles/systat.dir/build.make CMakeFiles/systat.dir/Console.cpp.i
 .PHONY : Console.cpp.i
 
 Console.s: Console.cpp.s
@@ -147,7 +147,7 @@ Console.s: Console.cpp.s
 
 # target to generate assembly for a file
 Console.cpp.s:
-	$(MAKE) -f CMakeFiles/c.dir/build.make CMakeFiles/c.dir/Console.cpp.s
+	$(MAKE) -f CMakeFiles/systat.dir/build.make CMakeFiles/systat.dir/Console.cpp.s
 .PHONY : Console.cpp.s
 
 Memory.o: Memory.cpp.o
@@ -156,7 +156,7 @@ Memory.o: Memory.cpp.o
 
 # target to build an object file
 Memory.cpp.o:
-	$(MAKE) -f CMakeFiles/c.dir/build.make CMakeFiles/c.dir/Memory.cpp.o
+	$(MAKE) -f CMakeFiles/systat.dir/build.make CMakeFiles/systat.dir/Memory.cpp.o
 .PHONY : Memory.cpp.o
 
 Memory.i: Memory.cpp.i
@@ -165,7 +165,7 @@ Memory.i: Memory.cpp.i
 
 # target to preprocess a source file
 Memory.cpp.i:
-	$(MAKE) -f CMakeFiles/c.dir/build.make CMakeFiles/c.dir/Memory.cpp.i
+	$(MAKE) -f CMakeFiles/systat.dir/build.make CMakeFiles/systat.dir/Memory.cpp.i
 .PHONY : Memory.cpp.i
 
 Memory.s: Memory.cpp.s
@@ -174,7 +174,7 @@ Memory.s: Memory.cpp.s
 
 # target to generate assembly for a file
 Memory.cpp.s:
-	$(MAKE) -f CMakeFiles/c.dir/build.make CMakeFiles/c.dir/Memory.cpp.s
+	$(MAKE) -f CMakeFiles/systat.dir/build.make CMakeFiles/systat.dir/Memory.cpp.s
 .PHONY : Memory.cpp.s
 
 Network.o: Network.cpp.o
@@ -183,7 +183,7 @@ Network.o: Network.cpp.o
 
 # target to build an object file
 Network.cpp.o:
-	$(MAKE) -f CMakeFiles/c.dir/build.make CMakeFiles/c.dir/Network.cpp.o
+	$(MAKE) -f CMakeFiles/systat.dir/build.make CMakeFiles/systat.dir/Network.cpp.o
 .PHONY : Network.cpp.o
 
 Network.i: Network.cpp.i
@@ -192,7 +192,7 @@ Network.i: Network.cpp.i
 
 # target to preprocess a source file
 Network.cpp.i:
-	$(MAKE) -f CMakeFiles/c.dir/build.make CMakeFiles/c.dir/Network.cpp.i
+	$(MAKE) -f CMakeFiles/systat.dir/build.make CMakeFiles/systat.dir/Network.cpp.i
 .PHONY : Network.cpp.i
 
 Network.s: Network.cpp.s
@@ -201,7 +201,7 @@ Network.s: Network.cpp.s
 
 # target to generate assembly for a file
 Network.cpp.s:
-	$(MAKE) -f CMakeFiles/c.dir/build.make CMakeFiles/c.dir/Network.cpp.s
+	$(MAKE) -f CMakeFiles/systat.dir/build.make CMakeFiles/systat.dir/Network.cpp.s
 .PHONY : Network.cpp.s
 
 Platform.o: Platform.cpp.o
@@ -210,7 +210,7 @@ Platform.o: Platform.cpp.o
 
 # target to build an object file
 Platform.cpp.o:
-	$(MAKE) -f CMakeFiles/c.dir/build.make CMakeFiles/c.dir/Platform.cpp.o
+	$(MAKE) -f CMakeFiles/systat.dir/build.make CMakeFiles/systat.dir/Platform.cpp.o
 .PHONY : Platform.cpp.o
 
 Platform.i: Platform.cpp.i
@@ -219,7 +219,7 @@ Platform.i: Platform.cpp.i
 
 # target to preprocess a source file
 Platform.cpp.i:
-	$(MAKE) -f CMakeFiles/c.dir/build.make CMakeFiles/c.dir/Platform.cpp.i
+	$(MAKE) -f CMakeFiles/systat.dir/build.make CMakeFiles/systat.dir/Platform.cpp.i
 .PHONY : Platform.cpp.i
 
 Platform.s: Platform.cpp.s
@@ -228,7 +228,7 @@ Platform.s: Platform.cpp.s
 
 # target to generate assembly for a file
 Platform.cpp.s:
-	$(MAKE) -f CMakeFiles/c.dir/build.make CMakeFiles/c.dir/Platform.cpp.s
+	$(MAKE) -f CMakeFiles/systat.dir/build.make CMakeFiles/systat.dir/Platform.cpp.s
 .PHONY : Platform.cpp.s
 
 Processor.o: Processor.cpp.o
@@ -237,7 +237,7 @@ Processor.o: Processor.cpp.o
 
 # target to build an object file
 Processor.cpp.o:
-	$(MAKE) -f CMakeFiles/c.dir/build.make CMakeFiles/c.dir/Processor.cpp.o
+	$(MAKE) -f CMakeFiles/systat.dir/build.make CMakeFiles/systat.dir/Processor.cpp.o
 .PHONY : Processor.cpp.o
 
 Processor.i: Processor.cpp.i
@@ -246,7 +246,7 @@ Processor.i: Processor.cpp.i
 
 # target to preprocess a source file
 Processor.cpp.i:
-	$(MAKE) -f CMakeFiles/c.dir/build.make CMakeFiles/c.dir/Processor.cpp.i
+	$(MAKE) -f CMakeFiles/systat.dir/build.make CMakeFiles/systat.dir/Processor.cpp.i
 .PHONY : Processor.cpp.i
 
 Processor.s: Processor.cpp.s
@@ -255,7 +255,7 @@ Processor.s: Processor.cpp.s
 
 # target to generate assembly for a file
 Processor.cpp.s:
-	$(MAKE) -f CMakeFiles/c.dir/build.make CMakeFiles/c.dir/Processor.cpp.s
+	$(MAKE) -f CMakeFiles/systat.dir/build.make CMakeFiles/systat.dir/Processor.cpp.s
 .PHONY : Processor.cpp.s
 
 main.o: main.cpp.o
@@ -264,7 +264,7 @@ main.o: main.cpp.o
 
 # target to build an object file
 main.cpp.o:
-	$(MAKE) -f CMakeFiles/c.dir/build.make CMakeFiles/c.dir/main.cpp.o
+	$(MAKE) -f CMakeFiles/systat.dir/build.make CMakeFiles/systat.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -273,7 +273,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) -f CMakeFiles/c.dir/build.make CMakeFiles/c.dir/main.cpp.i
+	$(MAKE) -f CMakeFiles/systat.dir/build.make CMakeFiles/systat.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -282,7 +282,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) -f CMakeFiles/c.dir/build.make CMakeFiles/c.dir/main.cpp.s
+	$(MAKE) -f CMakeFiles/systat.dir/build.make CMakeFiles/systat.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 # Help Target
@@ -293,7 +293,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... c"
+	@echo "... systat"
 	@echo "... Console.o"
 	@echo "... Console.i"
 	@echo "... Console.s"

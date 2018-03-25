@@ -9,6 +9,7 @@
 
 class Console {
 private:
+  int width, height;
   // ciuror location
   uint8_t row, col;
   // modes
@@ -23,6 +24,9 @@ private:
 public:
   Console();
   ~Console();
+
+public:
+  void resize();
 
 public:
   // enable/disable cursor

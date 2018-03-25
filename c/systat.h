@@ -15,12 +15,14 @@
 #include <sys/socket.h>
 #include <sys/sysctl.h>
 #include <sys/types.h>
+#include <sys/ioctl.h>
 
 #include <errno.h>
 #include <mach/mach_host.h>
 #include <netinet/in.h>
 #include <netinet/in_var.h>
 #include <unistd.h>
+#include <signal.h>
 
 #include <locale.h>
 #include <assert.h>

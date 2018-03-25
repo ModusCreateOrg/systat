@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 11)
 
 include_directories(.)
 
-add_executable(c
+add_executable(systat
         Processor.cpp
         main.cpp
         Network.cpp
