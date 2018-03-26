@@ -10,3 +10,4 @@ CMakefiles/
 cmake_install.cmake
 *.cbp
 core
+.DS_Store
