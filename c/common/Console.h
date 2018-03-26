@@ -49,6 +49,8 @@ public:
   void print(const char *fmt, ...);
   // printf style output to terminal, with newline
   void println(const char *fmt, ...);
+  // print line inverse, with newline
+  void inverseln(const char *fmt, ...);
   // emit a newline
   void newline();
 

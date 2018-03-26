@@ -1,7 +1,9 @@
-OBJ=	main.o Parser.o Processor.o
+OBJ=	main.o Parser.o Platform.o Processor.o Memory.o
+
+CFLAGS = -g
 
 .cpp.o:
-	g++ -c -o $*.o $*.cpp
+	g++ $(CFLAGS) -c -o $*.o $*.cpp
 
 
 systat: $(OBJ) ../common/libcommon.a

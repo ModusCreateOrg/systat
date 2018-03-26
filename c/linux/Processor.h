@@ -11,9 +11,15 @@ public:
 };
 
 struct Processor {
+  int num_cores;
   std::map<std::string, CPU *> last, current, delta;
+
+public:
   Processor();
-  void read(std::map<std::string, CPU *> &m);
+
+public:
+  // returns # of processors
+  int read(std::map<std::string, CPU *> &m);
   void copy(std::map<std::string, CPU *> &dst,
             std::map<std::string, CPU *> &src);
   void update();

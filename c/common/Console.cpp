@@ -318,6 +318,20 @@ void Console::println(const char *fmt, ...) {
   fflush(stdout);
 }
 
+void Console::inverseln(const char *fmt, ...) {
+  va_list ap;
+
+  va_start(ap, fmt);
+  console.bg_white();
+  console.fg_black();
+  vprintf(fmt, ap);
+  console.clear_eol();
+  console.mode_clear();
+  va_end(ap);
+  fputs("\n", stdout);
+  fflush(stdout);
+}
+
 void Console::newline() {
   fputs("\n", stdout);
   fflush(stdout);

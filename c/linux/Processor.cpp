@@ -2,6 +2,20 @@
 
 Processor processor;
 
+static char *u = nullptr;
+static char *ucstring(const char *s) {
+  if (u) {
+    delete u;
+  }
+  size_t len = strlen(s);
+  u = new char[len + 1];
+
+  for (size_t i = 0; i < len; i++) {
+    u[i] = toupper(int(s[i]));
+  }
+  return u;
+}
+
 void CPU::diff(CPU *newer, CPU *older) {
   this->user = newer->user - older->user;
   this->nice = newer->nice - older->nice;
@@ -15,21 +29,22 @@ void CPU::diff(CPU *newer, CPU *older) {
 void CPU::print() {
   double total = this->user + this->system + this->nice + this->idle +
                  this->iowait + this->irq + this->softirq;
-  printf("%-6s %6.1f %6.1f %6.1f %6.1f %6.1f %6.1f %6.1f\n", this->name,
-         100 * this->user / total, 100 * this->system / total,
-         100 * this->nice / total, 100 * this->idle / total,
-         100 * this->iowait / total, 100 * this->irq / total,
-         100 * this->softirq / total);
+  printf("%-6s %6.1f %6.1f %6.1f %6.1f %6.1f %6.1f %6.1f\n",
+         ucstring(this->name), 100 * this->user / total,
+         100 * this->system / total, 100 * this->nice / total,
+         100 * this->idle / total, 100 * this->iowait / total,
+         100 * this->irq / total, 100 * this->softirq / total);
 }
 
 Processor::Processor() {
   std::map<std::string, CPU *> last, current, delta;
-  this->read(this->current);
+  this->num_cores = this->read(this->current);
   this->copy(this->last, this->current);
   this->copy(this->delta, this->current);
 }
 
-void Processor::read(std::map<std::string, CPU *> &m) {
+int Processor::read(std::map<std::string, CPU *> &m) {
+  int count = 0;
   FILE *fp = fopen("/proc/stat", "r");
   char *line = nullptr;
   size_t len = 0;
@@ -37,6 +52,7 @@ void Processor::read(std::map<std::string, CPU *> &m) {
     Line l = Line(line);
     const char *token = l.get_token();
     if (!strncmp(token, "cpu", 3)) {
+      count++;
       CPU *cpu = m[token];
       if (!cpu) {
         cpu = m[token] = new CPU;
@@ -79,6 +95,7 @@ void Processor::read(std::map<std::string, CPU *> &m) {
     len = 0;
   }
   fclose(fp);
+  return count;
 }
 
 void Processor::copy(std::map<std::string, CPU *> &dst,
@@ -113,16 +130,9 @@ void Processor::update() {
 }
 
 void Processor::print() {
-  console.bg_white();
-  console.fg_black();
-  console.print("%6s", "CPU STATES");
-  console.clear_eol();
-  console.newline();
-  console.print("%6s %6s %6s %6s %6s %6s %6s %6s", "", "user", "sys", "nice",
-                "idle", "iowait", "irq", "softirq");
-  console.clear_eol();
-  console.newline();
-  console.mode_clear();
+  console.inverseln("%6s", "CPU STATES");
+  console.inverseln("%6s %6s %6s %6s %6s %6s %6s %6s", "", "user", "sys",
+                    "nice", "idle", "iowait", "irq", "softirq");
 
 #if 0
     printf("LAST\n");
