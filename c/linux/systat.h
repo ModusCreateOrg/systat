@@ -11,9 +11,10 @@
 #include <sys/utsname.h>
 #include <unistd.h>
 
+#include "Disk.h"
+#include "Memory.h"
 #include "Parser.h"
 #include "Platform.h"
 #include "Processor.h"
-#include "Memory.h"
 
 #endif

@@ -29,7 +29,7 @@ void CPU::diff(CPU *newer, CPU *older) {
 void CPU::print() {
   double total = this->user + this->system + this->nice + this->idle +
                  this->iowait + this->irq + this->softirq;
-  printf("%-6s %6.1f %6.1f %6.1f %6.1f %6.1f %6.1f %6.1f\n",
+  printf("%-6s %6.1f%% %6.1f%% %6.1f%% %6.1f%% %6.1f%% %6.1f%% %6.1f%%\n",
          ucstring(this->name), 100 * this->user / total,
          100 * this->system / total, 100 * this->nice / total,
          100 * this->idle / total, 100 * this->iowait / total,
@@ -41,6 +41,7 @@ Processor::Processor() {
   this->num_cores = this->read(this->current);
   this->copy(this->last, this->current);
   this->copy(this->delta, this->current);
+  this->update();
 }
 
 int Processor::read(std::map<std::string, CPU *> &m) {
@@ -130,8 +131,7 @@ void Processor::update() {
 }
 
 void Processor::print() {
-  console.inverseln("%6s", "CPU STATES");
-  console.inverseln("%6s %6s %6s %6s %6s %6s %6s %6s", "", "user", "sys",
+  console.inverseln("%-6s %7s %7s %7s %7s %7s %7s %7s", "CPUS", "user", "sys",
                     "nice", "idle", "iowait", "irq", "softirq");
 
 #if 0

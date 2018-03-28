@@ -7,6 +7,7 @@
 #include "Console.h"
 #include <signal.h>
 #include <stdarg.h>
+#include <stdlib.h>
 #include <unistd.h>
 //#include <stdio.h>
 //#include <stdlib.h>
@@ -52,19 +53,38 @@ void resize_handler(int sig) {
 }
 
 Console::Console() {
+  this->aborting = false;
+#if DEBUG == 0
   this->resize();
   this->reset();
   this->clear();
-
   // install sigwinch handler (window resize signal)
   signal(SIGWINCH, resize_handler);
+#endif
 }
 
 Console::~Console() {
-  this->reset();
-  this->clear();
+#if DEBUG == 0
+  if (!this->aborting) {
+    this->reset();
+    this->clear();
+  }
+#endif
 }
 
+void Console::abort(const char *fmt, ...) {
+  va_list ap;
+
+  va_start(ap, fmt);
+  this->aborting = true;
+#if DEBUG == 0
+  this->reset();
+  this->clear();
+#endif
+  vfprintf(stderr, fmt, ap);
+  va_end(ap);
+  fflush(stdout);
+}
 void Console::resize() {
   struct winsize size;
   ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
@@ -89,7 +109,7 @@ void Console::showCursor(bool on) {
 void Console::clear() {
   printf("%c[2J", ESC);
   fflush(stdout);
-  this->row = this->col = 0;
+  this->moveTo(0, 0);
 }
 
 /** @public **/

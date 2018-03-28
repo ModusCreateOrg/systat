@@ -1,17 +1,34 @@
 #include "systat.h"
+#include <signal.h>
 
+static bool alive = true;
+
+void sigint_handler(int) { alive = false; }
 int main(int ac, char *av[]) {
+  int y = 0;
+  signal(SIGINT, sigint_handler);
+#if DEBUG != 0
   console.clear();
-  while (1) {
+#endif
+  while (alive) {
     console.moveTo(0, 0);
     platform.update();
     platform.print();
-    console.moveTo(4, 0);
+    y = 4;
+    console.moveTo(y, 0);
     processor.update();
     processor.print();
-    console.moveTo(4 + 2 + processor.num_cores + 1, 0);
+    y += 1 + processor.num_cores + 1;
+    console.moveTo(y, 0);
     memory.update();
     memory.print();
+    y += 4;
+    console.moveTo(y, 0);
+    disk.update();
+    disk.print();
+    y += 2 + disk.num_disks;
+    console.moveTo(y, 0);
+    console.println("here");
     sleep(1);
   }
   //  console.println("hello, world");

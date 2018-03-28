@@ -13,6 +13,7 @@
 
 class Console {
 private:
+  bool aborting;
   int width, height;
   // ciuror location
   uint8_t row, col;
@@ -23,8 +24,14 @@ private:
   uint8_t background, foreground;
 
 public:
+  bool debug;
+
+public:
   Console();
   ~Console();
+
+public:
+  void abort(const char *fmt, ...);
 
 public:
   void resize();
