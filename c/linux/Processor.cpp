@@ -44,8 +44,8 @@ Processor::Processor() {
   this->update();
 }
 
-int Processor::read(std::map<std::string, CPU *> &m) {
-  int count = 0;
+uint16_t Processor::read(std::map<std::string, CPU *> &m) {
+  uint16_t count = 0;
   FILE *fp = fopen("/proc/stat", "r");
   char *line = nullptr;
   size_t len = 0;

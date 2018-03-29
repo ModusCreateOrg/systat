@@ -5,7 +5,7 @@ static bool alive = true;
 
 void sigint_handler(int) { alive = false; }
 int main(int ac, char *av[]) {
-  int y = 0;
+  uint16_t y = 0;
   signal(SIGINT, sigint_handler);
 #if DEBUG != 0
   console.clear();

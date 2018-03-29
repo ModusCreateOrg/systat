@@ -4,6 +4,7 @@
 #include "../common/Console.h"
 #include <fcntl.h>
 #include <map>
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <string>
