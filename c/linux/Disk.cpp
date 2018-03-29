@@ -132,6 +132,7 @@ int Disk::read(std::map<std::string, DiskStats *> &s) {
     line = nullptr;
     len = 0;
   }
+  fclose(fp);
   return count;
 }
 

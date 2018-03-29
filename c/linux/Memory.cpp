@@ -22,41 +22,41 @@ void Memory::update() {
     Line l = Line(line);
     const char *token = l.get_token();
     if (!strcmp(token, "MemTotal:")) {
-      delete[] token;
+      delete token;
       token = l.get_token();
       this->ram_total = atol(token);
     }
     else if (!strcmp(token, "MemFree:")) {
-      delete[] token;
+      delete token;
       token = l.get_token();
       this->ram_free = atol(token);
     }
     else if (!strcmp(token, "MemAvailable:")) {
-      delete[] token;
+      delete token;
       token = l.get_token();
       this->ram_available = atol(token);
     }
     else if (!strcmp(token, "Buffers:")) {
-      delete[] token;
+      delete token;
       token = l.get_token();
       this->ram_buffers = atol(token);
     }
     else if (!strcmp(token, "Cached:")) {
-      delete[] token;
+      delete token;
       token = l.get_token();
       this->ram_cached = atol(token);
     }
     else if (!strcmp(token, "SwapTotal:")) {
-      delete[] token;
+      delete token;
       token = l.get_token();
       this->swap_total = atol(token);
     }
     else if (!strcmp(token, "SwapFree:")) {
-      delete[] token;
+      delete token;
       token = l.get_token();
       this->swap_free = atol(token);
     }
-    delete[] token;
+    delete token;
     line = nullptr;
     len = 0;
   }

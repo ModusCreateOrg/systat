@@ -28,7 +28,8 @@ int main(int ac, char *av[]) {
     disk.print();
     y += 2 + disk.num_disks;
     console.moveTo(y, 0);
-    console.println("here");
+    virtual_memory.update();
+    virtual_memory.print();
     sleep(1);
   }
   //  console.println("hello, world");

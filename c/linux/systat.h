@@ -16,5 +16,6 @@
 #include "Parser.h"
 #include "Platform.h"
 #include "Processor.h"
+#include "VirtualMemory.h"
 
 #endif

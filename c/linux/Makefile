@@ -1,4 +1,4 @@
-OBJ=	main.o Parser.o Platform.o Disk.o Processor.o Memory.o
+OBJ=	main.o Parser.o Platform.o Disk.o Processor.o Memory.o VirtualMemory.o
 
 CFLAGS = -g
 
