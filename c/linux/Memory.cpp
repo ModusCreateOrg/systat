@@ -54,7 +54,7 @@ void Memory::update() {
     else if (!strcmp(token, "SwapFree:")) {
       delete[] token;
       token = l.get_token();
-      this->swap_total = atol(token);
+      this->swap_free = atol(token);
     }
     delete[] token;
     line = nullptr;
