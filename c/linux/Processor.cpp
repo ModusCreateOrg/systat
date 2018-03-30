@@ -131,8 +131,8 @@ void Processor::update() {
 }
 
 void Processor::print() {
-  console.inverseln("%-6s %7s %7s %7s %7s %7s %7s %7s", "CPUS", "User", "System",
-                    "Nice", "Idle", "IOWait", "IRQ", "SoftIRQ");
+  console.inverseln("%-6s %7s %7s %7s %7s %7s %7s %7s", "CPUS", "User",
+                    "System", "Nice", "Idle", "IOWait", "IRQ", "SoftIRQ");
 
 #if 0
     printf("LAST\n");
