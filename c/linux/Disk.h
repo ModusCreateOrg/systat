@@ -11,6 +11,10 @@ struct DiskStats {
       ios_in_progress, time_doing_ios, weighted_time_ios;
 
 public:
+  DiskStats();
+  ~DiskStats();
+
+public:
   void diff(DiskStats *newer, DiskStats *older);
 };
 
@@ -18,6 +22,7 @@ class Disk {
   std::map<std::string, DiskStats *> last, current, delta;
 
 public:
+  bool condensed;
   uint16_t num_disks;
 
 public:
@@ -31,7 +36,7 @@ private:
 
 public:
   void update();
-  void print();
+  uint16_t print();
 };
 
 extern Disk disk;

@@ -3,6 +3,15 @@
 
 Disk disk;
 
+DiskStats::DiskStats() { this->name = nullptr; }
+
+DiskStats::~DiskStats() {
+  if (this->name) {
+    delete this->name;
+    this->name = nullptr;
+  }
+}
+
 void DiskStats::diff(DiskStats *newer, DiskStats *older) {
   this->reads_issued = newer->reads_issued - older->reads_issued;
   this->reads_merged = newer->reads_merged - older->reads_merged;
@@ -18,6 +27,7 @@ void DiskStats::diff(DiskStats *newer, DiskStats *older) {
 }
 
 Disk::Disk() {
+  this->condensed = false;
   this->num_disks = this->read(this->current);
   this->copy(this->last, this->current);
   this->copy(this->delta, this->current);
@@ -55,25 +65,13 @@ void Disk::copy(std::map<std::string, DiskStats *> &dst,
 
 uint16_t Disk::read(std::map<std::string, DiskStats *> &s) {
   uint16_t count = 0;
-  FILE *fp = fopen("/proc/diskstats", "r");
-  char *line = nullptr;
-  size_t len = 0;
-  while (getline(&line, &len, fp) > 0) {
-    Line l = Line(line);
-    const char *token = l.get_token();
-    uint64_t major = atol(token);
-    delete[] token;
-
-    token = l.get_token();
-    uint64_t minor = atol(token);
-    delete[] token;
+  Parser p("/proc/diskstats");
+  while (p.next()) {
+    uint64_t major = p.get_long(), minor = p.get_long();
 
     if (minor == 0) {
-      token = l.get_token();
+      const char *token = p.get_token();
       if (!strncmp(token, "loop", 4) || !strncmp(token, "dm-", 3)) {
-        delete[] token;
-        line = nullptr;
-        len = 0;
         continue;
       }
 
@@ -81,57 +79,24 @@ uint16_t Disk::read(std::map<std::string, DiskStats *> &s) {
       DiskStats *info = s[token];
       if (!info) {
         info = s[token] = new DiskStats;
-        info->name = token;
+        info->name = strdup(token);
       }
 
-      token = l.get_token();
-      info->reads_issued = atol(token);
-      delete[] token;
-
-      token = l.get_token();
-      info->reads_merged = atol(token);
-      delete[] token;
-
-      token = l.get_token();
-      info->sectors_read = atol(token);
-      delete[] token;
-
-      token = l.get_token();
-      info->time_reading = atol(token);
-      delete[] token;
-
-      token = l.get_token();
-      info->writes_completed = atol(token);
-      delete[] token;
-
-      token = l.get_token();
-      info->writes_merged = atol(token);
-      delete[] token;
-
-      token = l.get_token();
-      info->sectors_written = atol(token);
-      delete[] token;
-
-      token = l.get_token();
-      info->time_writing = atol(token);
-      delete[] token;
-
-      token = l.get_token();
-      info->ios_in_progress = atol(token);
-      delete[] token;
-
-      token = l.get_token();
-      info->time_doing_ios = atol(token);
-      delete[] token;
-
-      token = l.get_token();
-      info->weighted_time_ios = atol(token);
-      delete[] token;
+      info->major = major;
+      info->minor = minor;
+      info->reads_issued = p.get_long();
+      info->reads_merged = p.get_long();
+      info->sectors_read = p.get_long();
+      info->time_reading = p.get_long();
+      info->writes_completed = p.get_long();
+      info->writes_merged = p.get_long();
+      info->sectors_written = p.get_long();
+      info->time_writing = p.get_long();
+      info->ios_in_progress = p.get_long();
+      info->time_doing_ios = p.get_long();
+      info->weighted_time_ios = p.get_long();
     }
-    line = nullptr;
-    len = 0;
   }
-  fclose(fp);
   return count;
 }
 
@@ -145,11 +110,15 @@ void Disk::update() {
   }
 }
 
-void Disk::print() {
+uint16_t Disk::print() {
+  uint16_t count = 0;
   console.inverseln("%-16s %5s %5s", "DISK ACTIVITY", "IN", "OUT");
+  count++;
   for (const auto &kv : this->delta) {
     DiskStats *info = (DiskStats *)kv.second;
     console.println("%-16s %5d %5d", info->name, info->sectors_read,
                     info->sectors_written);
+    count++;
   }
+  return count;
 }

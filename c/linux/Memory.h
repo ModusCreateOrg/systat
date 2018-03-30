@@ -13,7 +13,7 @@ public:
 
 public:
   void update();
-  void print();
+  uint16_t print();
 };
 
 extern Memory memory;

@@ -1,4 +1,4 @@
-OBJ=	main.o Parser.o Platform.o Disk.o Processor.o Memory.o VirtualMemory.o
+OBJ=	main.o Platform.o Disk.o Processor.o Memory.o VirtualMemory.o Network.o
 
 CFLAGS = -g
 
@@ -21,8 +21,11 @@ debug:
 	$(MAKE) clean && DEBUG=1 $(MAKE)
 
 clean:
-	rm -f *.o systat
+	rm -f *.o systat .depend
 	cd ../common && $(MAKE) clean
+
+install: systat
+	install systat /usr/local/bin
 
 depend: .depend
 

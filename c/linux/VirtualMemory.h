@@ -31,7 +31,7 @@ private:
 
 public:
   void update();
-  void print();
+  uint16_t print();
 };
 
 extern VirtualMemory virtual_memory;

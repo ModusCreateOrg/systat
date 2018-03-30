@@ -15,7 +15,7 @@ public:
 public:
   void sleep();
   void update();
-  void print();
+  uint16_t print();
 };
 
 extern Platform platform;

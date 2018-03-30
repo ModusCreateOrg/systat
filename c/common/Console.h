@@ -14,7 +14,6 @@
 class Console {
 private:
   bool aborting;
-  int width, height;
   // ciuror location
   uint8_t row, col;
   // modes
@@ -24,7 +23,7 @@ private:
   uint8_t background, foreground;
 
 public:
-  bool debug;
+  int width, height;
 
 public:
   Console();
@@ -38,7 +37,7 @@ public:
 
 public:
   // enable/disable cursor
-  void showCursor(bool on = true);
+  void show_cursor(bool on = true);
 
   // clear screen
   void clear();

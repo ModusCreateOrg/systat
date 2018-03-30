@@ -70,6 +70,7 @@ Console::~Console() {
     this->clear();
   }
 #endif
+  this->show_cursor(true);
 }
 
 void Console::abort(const char *fmt, ...) {
@@ -81,6 +82,7 @@ void Console::abort(const char *fmt, ...) {
   this->reset();
   this->clear();
 #endif
+  this->show_cursor(true);
   vfprintf(stderr, fmt, ap);
   va_end(ap);
   fflush(stdout);
@@ -93,13 +95,13 @@ void Console::resize() {
   this->clear();
 }
 
-void Console::showCursor(bool on) {
+void Console::show_cursor(bool on) {
   if (on) {
-    printf("%c[?25h", ESC);
+    fputs("\e[?25h", stdout);
     cursor_hidden = false;
   }
   else {
-    printf("%c[?25l", ESC);
+    fputs("\e[?25l", stdout);
     cursor_hidden = true;
   }
   fflush(stdout);
@@ -116,7 +118,7 @@ void Console::clear() {
 void Console::reset() {
   this->set_mode(ATTR_OFF, true);
   this->background = this->foreground = 0;
-  this->showCursor();
+  this->show_cursor(true);
 }
 
 /** @public **/
@@ -146,6 +148,7 @@ void Console::set_mode(uint8_t attr, bool on) {
     case ATTR_OFF:
       this->bold = this->underscore = this->blink = this->inverse =
           this->concealed = false;
+      this->show_cursor(!this->cursor_hidden);
       break;
     case ATTR_BOLD:
       this->bold = on;
