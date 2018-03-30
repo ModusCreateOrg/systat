@@ -1,6 +1,9 @@
 #ifndef SYSTAT_H
 #define SYSTAT_H
 
+#define ENABLE_LOGGING
+#undef ENABLE_LOGGING
+
 #include <fcntl.h>
 #include <map>
 #include <stdint.h>

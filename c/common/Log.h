@@ -1,6 +1,9 @@
 #ifndef LOG_H
 #define LOG_H
 
+// NOTE NOTE NOTE
+// You must #define ENABLE_LOGGING before including this file, if you want
+// logging
 class Log {
 public:
   Log();

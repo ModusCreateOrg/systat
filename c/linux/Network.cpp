@@ -97,7 +97,7 @@ uint16_t Network::read(std::map<std::string, NetStats *> &m) {
     stats->rx_fifo = p.get_long();
     stats->rx_frame = p.get_long();
     stats->rx_compressed = p.get_long();
-    stats->rx_multicast;
+    stats->rx_multicast = p.get_long();
     stats->tx_bytes = p.get_long();
     stats->tx_packets = p.get_long();
     stats->tx_errors = p.get_long();
@@ -112,8 +112,9 @@ uint16_t Network::read(std::map<std::string, NetStats *> &m) {
 
 uint16_t Network::print() {
   uint16_t count = 0;
-  console.inverseln("%-10s %12s %12s %12s %12s %12s %12s", "NETWORK", "Read",
-                    "Packets", "Errors", "Write", "Packets", "Errors");
+  console.inverseln("%-10s %12s %12s %12s %12s %12s %12s", "NETWORK",
+                    "Read (KB/s)", "Write (KB/s)", "RX Packets", "RX Errors",
+                    "TX Packets", "TX Errors");
   count++;
 
   for (const auto &kv : this->delta) {
@@ -121,9 +122,11 @@ uint16_t Network::print() {
              *current = this->current[delta->name];
 
     if (strcmp(delta->name, "lo") && current->tx_packets) {
-      console.println("%-10s %12d %12d %12d %12d %12d %12d", delta->name,
-                      delta->rx_bytes, current->rx_packets, current->rx_errors,
-                      delta->tx_bytes, current->tx_packets, current->tx_errors);
+      console.println("%-10s %12.2f %12.2f %12d %12d %12d %12d", delta->name,
+                      double(delta->rx_bytes) / 1024,
+                      double(delta->tx_bytes) / 1024, current->rx_packets,
+                      current->rx_errors, current->tx_packets,
+                      current->tx_errors);
     }
     count++;
   }

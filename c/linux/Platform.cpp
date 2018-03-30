@@ -33,9 +33,17 @@ uint16_t Platform::print() {
   int hours = uptime / secs_per_hour;
   int minutes = (uptime - hours * secs_per_hour) / 60;
 
-  console.inverseln("systat/%d [%s/%s %s] %s %d", this->refresh_time,
-                    this->info.nodename, this->info.sysname, this->info.release,
-                    s, console.height);
+  char out[console.width + 1];
+  sprintf(out, "systat/%d [%s/%s %s]", this->refresh_time, this->info.nodename,
+          this->info.sysname, this->info.release);
+  size_t fill = console.width - strlen(out) - strlen(s) - 1;
+  register char *ptr = &out[strlen(out)];
+  while (fill > 0) {
+    *ptr++ = ' ';
+    fill--;
+  }
+  strcat(ptr, s);
+  console.inverseln(out);
 
   console.mode_bold(true);
   console.print("Uptime: ");
