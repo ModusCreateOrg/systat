@@ -18,7 +18,6 @@ void DiskStats::diff(DiskStats *newer, DiskStats *older) {
 }
 
 Disk::Disk() {
-  //
   this->num_disks = this->read(this->current);
   this->copy(this->last, this->current);
   this->copy(this->delta, this->current);
@@ -54,19 +53,19 @@ void Disk::copy(std::map<std::string, DiskStats *> &dst,
   }
 }
 
-int Disk::read(std::map<std::string, DiskStats *> &s) {
-  int count = 0;
+uint16_t Disk::read(std::map<std::string, DiskStats *> &s) {
+  uint16_t count = 0;
   FILE *fp = fopen("/proc/diskstats", "r");
   char *line = nullptr;
   size_t len = 0;
   while (getline(&line, &len, fp) > 0) {
     Line l = Line(line);
     const char *token = l.get_token();
-    unsigned long major = atol(token);
+    uint64_t major = atol(token);
     delete[] token;
 
     token = l.get_token();
-    unsigned long minor = atol(token);
+    uint64_t minor = atol(token);
     delete[] token;
 
     if (minor == 0) {
@@ -132,6 +131,7 @@ int Disk::read(std::map<std::string, DiskStats *> &s) {
     line = nullptr;
     len = 0;
   }
+  fclose(fp);
   return count;
 }
 

@@ -5,7 +5,7 @@ static bool alive = true;
 
 void sigint_handler(int) { alive = false; }
 int main(int ac, char *av[]) {
-  int y = 0;
+  uint16_t y = 0;
   signal(SIGINT, sigint_handler);
 #if DEBUG != 0
   console.clear();
@@ -28,7 +28,8 @@ int main(int ac, char *av[]) {
     disk.print();
     y += 2 + disk.num_disks;
     console.moveTo(y, 0);
-    console.println("here");
+    virtual_memory.update();
+    virtual_memory.print();
     sleep(1);
   }
   //  console.println("hello, world");

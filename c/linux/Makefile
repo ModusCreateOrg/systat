@@ -1,4 +1,4 @@
-OBJ=	main.o Parser.o Platform.o Disk.o Processor.o Memory.o
+OBJ=	main.o Parser.o Platform.o Disk.o Processor.o Memory.o VirtualMemory.o
 
 CFLAGS = -g
 
@@ -8,18 +8,27 @@ DEBUG?=0
 	g++ $(CFLAGS) -c -o $*.o $*.cpp -DDEBUG=$(DEBUG)
 
 
-systat: $(OBJ) ../common/libcommon.a
+systat: .depend $(OBJ) ../common/libcommon.a
 	g++ -o systat $(OBJ) -L ../common -lcommon -DDEBUG=$(DEBUG)
 
 
 $%.o: %.cpp %.h
 
 ../common/libcommon.a: ../common/*.cpp ../common/*.h
-	cd ../common && make DEBUG=$(DEBUG)
+	cd ../common && $(MAKE) DEBUG=$(DEBUG)
 
 debug:
-	make clean && DEBUG=1 make
+	$(MAKE) clean && DEBUG=1 $(MAKE)
 
 clean:
 	rm -f *.o systat
-	cd ../common && make clean
+	cd ../common && $(MAKE) clean
+
+depend: .depend
+
+.depend:	*.cpp
+	rm -f ./.depend
+	g++ -MM $^ -MF ./.depend
+
+include .depend
+
