@@ -13,7 +13,7 @@ public:
 
 public:
   void update();
-  uint16_t print();
+  uint16_t print(bool test);
 };
 
 extern Memory memory;

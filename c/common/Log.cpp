@@ -8,7 +8,6 @@ Log log;
 
 static FILE *fp = nullptr;
 Log::Log() {
-#ifdef ENABLE_LOGGING
   fp = fopen("/tmp/systat.log", "w");
   if (!fp) {
     perror("Log open");
@@ -16,28 +15,20 @@ Log::Log() {
   }
   fprintf(fp, "Logging activated\n");
   fflush(fp);
-#endif
 }
 
-Log::~Log() {
-#ifdef ENABLE_LOGGING
-  fclose(fp);
-#endif
-}
+Log::~Log() { fclose(fp); }
 
 void Log::print(const char *fmt, ...) {
-#ifdef ENABLE_LOGGING
   va_list ap;
 
   va_start(ap, fmt);
   vfprintf(fp, fmt, ap);
   va_end(ap);
   fflush(fp);
-#endif
 }
 
 void Log::println(const char *fmt, ...) {
-#ifdef ENABLE_LOGGING
   va_list ap;
 
   va_start(ap, fmt);
@@ -45,5 +36,4 @@ void Log::println(const char *fmt, ...) {
   fputc('\n', fp);
   va_end(ap);
   fflush(fp);
-#endif
 }

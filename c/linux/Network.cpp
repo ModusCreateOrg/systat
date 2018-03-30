@@ -110,11 +110,13 @@ uint16_t Network::read(std::map<std::string, NetStats *> &m) {
   return count;
 }
 
-uint16_t Network::print() {
+uint16_t Network::print(bool test) {
   uint16_t count = 0;
-  console.inverseln("%-10s %12s %12s %12s %12s %12s %12s", "NETWORK",
-                    "Read (KB/s)", "Write (KB/s)", "RX Packets", "RX Errors",
-                    "TX Packets", "TX Errors");
+  if (!test) {
+    console.inverseln("%-10s %12s %12s %12s %12s %12s %12s", "NETWORK",
+                      "Read (KB/s)", "Write (KB/s)", "RX Packets", "RX Errors",
+                      "TX Packets", "TX Errors");
+  }
   count++;
 
   for (const auto &kv : this->delta) {
@@ -122,13 +124,15 @@ uint16_t Network::print() {
              *current = this->current[delta->name];
 
     if (strcmp(delta->name, "lo") && current->tx_packets) {
-      console.println("%-10s %12.2f %12.2f %12d %12d %12d %12d", delta->name,
-                      double(delta->rx_bytes) / 1024,
-                      double(delta->tx_bytes) / 1024, current->rx_packets,
-                      current->rx_errors, current->tx_packets,
-                      current->tx_errors);
+      if (!test) {
+        console.println("%-10s %12.2f %12.2f %12d %12d %12d %12d", delta->name,
+                        double(delta->rx_bytes) / 1024,
+                        double(delta->tx_bytes) / 1024, current->rx_packets,
+                        current->rx_errors, current->tx_packets,
+                        current->tx_errors);
+      }
+      count++;
     }
-    count++;
   }
   return count;
 }

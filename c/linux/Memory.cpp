@@ -45,13 +45,15 @@ void Memory::update() {
   this->swap_used = this->swap_total - this->swap_free;
 }
 
-uint16_t Memory::print() {
-  console.inverseln("%-16s %8s %8s %8s %8s %8s %8s", "MEMORY (KB)", "Total",
-                    "Used", "Free", "Buffer", "Cache", "Avail");
-  console.println("%-16s %8d %8d %8d %8d %8d %8d", "Real", this->ram_total,
-                  this->ram_used, this->ram_free, this->ram_buffers,
-                  this->ram_cached, this->ram_available);
-  console.println("%-16s %8d %8d %8d", "Swap", this->swap_total,
-                  this->swap_used, this->swap_free);
+uint16_t Memory::print(bool test) {
+  if (!test) {
+    console.inverseln("%-16s %8s %8s %8s %8s %8s %8s", "MEMORY (KB)", "Total",
+                      "Used", "Free", "Buffer", "Cache", "Avail");
+    console.println("%-16s %8d %8d %8d %8d %8d %8d", "Real", this->ram_total,
+                    this->ram_used, this->ram_free, this->ram_buffers,
+                    this->ram_cached, this->ram_available);
+    console.println("%-16s %8d %8d %8d", "Swap", this->swap_total,
+                    this->swap_used, this->swap_free);
+  }
   return 3;
 }

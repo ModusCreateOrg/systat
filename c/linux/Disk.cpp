@@ -110,14 +110,18 @@ void Disk::update() {
   }
 }
 
-uint16_t Disk::print() {
+uint16_t Disk::print(bool test) {
   uint16_t count = 0;
-  console.inverseln("%-16s %5s %5s", "DISK ACTIVITY", "IN", "OUT");
+  if (!test) {
+    console.inverseln("%-16s %5s %5s", "DISK ACTIVITY", "IN", "OUT");
+  }
   count++;
   for (const auto &kv : this->delta) {
-    DiskStats *info = (DiskStats *)kv.second;
-    console.println("%-16s %5d %5d", info->name, info->sectors_read,
-                    info->sectors_written);
+    if (!test) {
+      DiskStats *info = (DiskStats *)kv.second;
+      console.println("%-16s %5d %5d", info->name, info->sectors_read,
+                      info->sectors_written);
+    }
     count++;
   }
   return count;

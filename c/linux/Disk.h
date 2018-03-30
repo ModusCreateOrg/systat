@@ -36,7 +36,8 @@ private:
 
 public:
   void update();
-  uint16_t print();
+  // print stats, or just return height if test is true
+  uint16_t print(bool test);
 };
 
 extern Disk disk;

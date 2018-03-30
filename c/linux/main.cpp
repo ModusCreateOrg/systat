@@ -8,13 +8,67 @@ void sigint_handler(int) {
   alive = false;
 }
 
-static uint16_t blank_line(uint16_t row) {
+static uint16_t blank_line(uint16_t row, bool test) {
   if (condensed) {
     return 0;
   }
-  console.moveTo(row, 0);
-  console.clear_eol();
+  if (!test) {
+    console.moveTo(row, 0);
+    console.clear_eol();
+  }
   return 1;
+}
+
+int render(bool test) {
+  uint16_t y = 0;
+
+  console.moveTo(y, 0);
+  y += platform.print(test);
+  y += blank_line(y, test);
+
+  console.moveTo(y, 0);
+  y += processor.print(test);
+  y += blank_line(y, test);
+
+  console.moveTo(y, 0);
+  y += memory.print(test);
+  y += blank_line(y, test);
+
+  console.moveTo(y, 0);
+  y += disk.print(test);
+  y += blank_line(y, test);
+
+  console.moveTo(y, 0);
+  y += virtual_memory.print(test);
+  y += blank_line(y, test);
+
+  console.moveTo(y, 0);
+  y += network.print(test);
+  y += blank_line(y, test);
+  return y;
+}
+
+/**
+ * fill();
+ *
+ * Condense output until it fits in the current window.
+ *
+ * This is done by eliminating blank lines and hiding
+ * detailed per CPU core stats, etc.
+ */
+void fit() {
+  condensed = false;
+  processor.condensed = false;
+  uint16_t h = render(true);
+  if (h <= console.height) {
+    return;
+  }
+  processor.condensed = true;
+  h = render(true);
+  if (h <= console.height) {
+    return;
+  }
+  condensed = true;
 }
 
 int main(int ac, char *av[]) {
@@ -25,57 +79,34 @@ int main(int ac, char *av[]) {
 #endif
   uint16_t last_height = 0;
   while (alive) {
-    console.show_cursor(false);
-    uint16_t y = 0;
-    console.moveTo(0, 0);
     platform.update();
-    y += platform.print();
-    y += blank_line(y);
-
-    console.moveTo(y, 0);
     processor.update();
-    y += processor.print();
-    y += blank_line(y);
-
-    console.moveTo(y, 0);
     memory.update();
-    y += memory.print();
-    y += blank_line(y);
-
-    console.moveTo(y, 0);
     disk.update();
-    y += disk.print();
-    y += blank_line(y);
-
-    console.moveTo(y, 0);
     virtual_memory.update();
-    y += virtual_memory.print();
-    y += blank_line(y);
-
-    console.moveTo(y, 0);
     network.update();
-    y += network.print();
-    y += blank_line(y);
-
+    console.show_cursor(false);
+    fit();
+    uint16_t y = render(false);
     if (console.height != last_height || y > console.height) {
       console.clear();
-      if (y > console.height) {
-        if (!processor.condensed) {
-          log.println("condensed");
-          processor.condensed = true;
-        }
-        else {
-          condensed = true;
-        }
-      }
-      else {
-        log.println("fits");
-        condensed = false;
-        processor.condensed = false;
-      }
+      //      if (y > console.height) {
+      //        if (!processor.condensed) {
+      //          log.println("condensed");
+      //          processor.condensed = true;
+      //        }
+      //        else {
+      //          condensed = true;
+      //        }
+      //      }
+      //      else {
+      //        log.println("fits");
+      //        condensed = false;
+      //        processor.condensed = false;
+      //      }
       last_height = console.height;
-      log.println("main %d %d %s", y, console.height,
-                  condensed ? "true" : "false");
+      //      log.println("main %d %d %s", y, console.height,
+      //                  condensed ? "true" : "false");
     }
     sleep(1);
   }

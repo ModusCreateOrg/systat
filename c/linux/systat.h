@@ -2,7 +2,7 @@
 #define SYSTAT_H
 
 #define ENABLE_LOGGING
-#undef ENABLE_LOGGING
+//#undef ENABLE_LOGGING
 
 #include <fcntl.h>
 #include <map>

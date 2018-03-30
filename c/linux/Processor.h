@@ -26,7 +26,7 @@ public:
   void copy(std::map<std::string, CPU *> &dst,
             std::map<std::string, CPU *> &src);
   void update();
-  uint16_t print();
+  uint16_t print(bool test);
 };
 
 extern Processor processor;

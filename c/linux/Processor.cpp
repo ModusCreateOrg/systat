@@ -2,6 +2,8 @@
 
 Processor processor;
 
+static bool initialized = false;
+
 static char *u = nullptr;
 static char *ucstring(const char *s) {
   if (u) {
@@ -30,11 +32,18 @@ void CPU::diff(CPU *newer, CPU *older) {
 void CPU::print() {
   double total = this->user + this->system + this->nice + this->idle +
                  this->iowait + this->irq + this->softirq;
-  printf("%-6s %6.1f%% %6.1f%% %6.1f%% %6.1f%% %6.1f%% %6.1f%% %6.1f%%\n",
-         ucstring(this->name), 100 * this->user / total,
-         100 * this->system / total, 100 * this->nice / total,
-         100 * this->idle / total, 100 * this->iowait / total,
-         100 * this->irq / total, 100 * this->softirq / total);
+
+  if (total) {
+    console.println("%-6s %6.1f%% %6.1f%% %6.1f%% %6.1f%% %6.1f%% %6.1f%% %6.1f%%",
+           ucstring(this->name), 100 * this->user / total,
+           100 * this->system / total, 100 * this->nice / total,
+           100 * this->idle / total, 100 * this->iowait / total,
+           100 * this->irq / total, 100 * this->softirq / total);
+  }
+  else {
+    console.println("%-6s %6.1f%% %6.1f%% %6.1f%% %6.1f%% %6.1f%% %6.1f%% %6.1f%%",
+           ucstring(this->name), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  }
 }
 
 Processor::Processor() {
@@ -43,6 +52,7 @@ Processor::Processor() {
   this->copy(this->last, this->current);
   this->copy(this->delta, this->current);
   this->update();
+  initialized = true;
 }
 
 uint16_t Processor::read(std::map<std::string, CPU *> &m) {
@@ -100,15 +110,19 @@ void Processor::update() {
   }
 }
 
-uint16_t Processor::print() {
+uint16_t Processor::print(bool test) {
   uint16_t count = 0;
-  console.inverseln("%-6s %7s %7s %7s %7s %7s %7s %7s", "CPUS", "User",
-                    "System", "Nice", "Idle", "IOWait", "IRQ", "SoftIRQ");
+  if (!test) {
+    console.inverseln("%-6s %7s %7s %7s %7s %7s %7s %7s", "CPUS", "User",
+                      "System", "Nice", "Idle", "IOWait", "IRQ", "SoftIRQ");
+  }
   count++;
 
   for (const auto &kv : this->delta) {
     CPU *cpu = (CPU *)kv.second;
-    cpu->print();
+    if (!test) {
+      cpu->print();
+    }
     count++;
     if (this->condensed) {
       break;

@@ -18,7 +18,10 @@ void Platform::update() {
   }
 }
 
-uint16_t Platform::print() {
+uint16_t Platform::print(bool test) {
+  if (test) {
+    return 3;
+  }
   // get current time in human readable form
   time_t now = time(0);
   struct tm *p = localtime(&now);

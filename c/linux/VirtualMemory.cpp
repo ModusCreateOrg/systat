@@ -37,7 +37,10 @@ void VirtualMemory::update() {
   this->delta.diff(&this->current, &this->last);
 }
 
-uint16_t VirtualMemory::print() {
+uint16_t VirtualMemory::print(bool test) {
+  if (test) {
+    return 4;
+  }
   console.inverseln("%-16s %12s %23s", "VIRTUAL MEMORY", "Current",
                     "Aggregate");
   console.inverseln("%-16s %6s %6s %12s %12s", "", "IN", "OUT", "IN", "OUT");
