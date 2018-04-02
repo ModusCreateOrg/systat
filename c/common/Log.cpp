@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-Log log;
+Log logger;
 
 static FILE *fp = nullptr;
 Log::Log() {

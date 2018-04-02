@@ -2,8 +2,6 @@
 
 Processor processor;
 
-static bool initialized = false;
-
 static char *u = nullptr;
 static char *ucstring(const char *s) {
   if (u) {
@@ -52,7 +50,6 @@ Processor::Processor() {
   this->copy(this->last, this->current);
   this->copy(this->delta, this->current);
   this->update();
-  initialized = true;
 }
 
 uint16_t Processor::read(std::map<std::string, CPU *> &m) {

@@ -8,8 +8,9 @@
 
 class Platform {
 public:
-  int  cpu_count;
-  int num_processes;
+  uint16_t refresh_time;
+  uint64_t uptime, idle;
+  uint64_t num_processes, cpu_count;
   double loadavg[3];
   char *hostname,
        *sysname,
@@ -22,7 +23,7 @@ public:
 
 public:
   void update();
-  void print();
+  uint16_t print(bool test);
 };
 
 extern Platform platform;

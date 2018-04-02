@@ -337,6 +337,7 @@ void Console::println(const char *fmt, ...) {
   va_start(ap, fmt);
   vprintf(fmt, ap);
   va_end(ap);
+  this->clear_eol();
   fputs("\n", stdout);
   fflush(stdout);
 }
@@ -356,6 +357,7 @@ void Console::inverseln(const char *fmt, ...) {
 }
 
 void Console::newline() {
+  this->clear_eol();
   fputs("\n", stdout);
   fflush(stdout);
 }

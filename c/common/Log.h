@@ -14,6 +14,6 @@ public:
   void println(const char *fmt, ...);
 };
 
-extern Log log;
+extern Log logger;
 
 #endif
