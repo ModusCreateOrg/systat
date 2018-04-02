@@ -72,7 +72,7 @@ void fit() {
 }
 
 int main(int ac, char *av[]) {
-  log.println("Systat Main");
+  logger.println("Systat Main");
   signal(SIGINT, sigint_handler);
 #if DEBUG != 0
   console.clear();
@@ -92,7 +92,7 @@ int main(int ac, char *av[]) {
       console.clear();
       //      if (y > console.height) {
       //        if (!processor.condensed) {
-      //          log.println("condensed");
+      //          logger.println("condensed");
       //          processor.condensed = true;
       //        }
       //        else {
@@ -100,12 +100,12 @@ int main(int ac, char *av[]) {
       //        }
       //      }
       //      else {
-      //        log.println("fits");
+      //        logger.println("fits");
       //        condensed = false;
       //        processor.condensed = false;
       //      }
       last_height = console.height;
-      //      log.println("main %d %d %s", y, console.height,
+      //      logger.println("main %d %d %s", y, console.height,
       //                  condensed ? "true" : "false");
     }
     sleep(1);
