@@ -7,6 +7,7 @@
 #include "Console.h"
 #include <signal.h>
 #include <stdarg.h>
+#include <stdlib.h>
 #include <unistd.h>
 //#include <stdio.h>
 //#include <stdlib.h>
@@ -52,19 +53,40 @@ void resize_handler(int sig) {
 }
 
 Console::Console() {
+  this->aborting = false;
+#if DEBUG == 0
   this->resize();
   this->reset();
   this->clear();
-
   // install sigwinch handler (window resize signal)
   signal(SIGWINCH, resize_handler);
+#endif
 }
 
 Console::~Console() {
-  this->reset();
-  this->clear();
+#if DEBUG == 0
+  if (!this->aborting) {
+    this->reset();
+    this->clear();
+  }
+#endif
+  this->show_cursor(true);
 }
 
+void Console::abort(const char *fmt, ...) {
+  va_list ap;
+
+  va_start(ap, fmt);
+  this->aborting = true;
+#if DEBUG == 0
+  this->reset();
+  this->clear();
+#endif
+  this->show_cursor(true);
+  vfprintf(stderr, fmt, ap);
+  va_end(ap);
+  fflush(stdout);
+}
 void Console::resize() {
   struct winsize size;
   ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
@@ -73,13 +95,13 @@ void Console::resize() {
   this->clear();
 }
 
-void Console::showCursor(bool on) {
+void Console::show_cursor(bool on) {
   if (on) {
-    printf("%c[?25h", ESC);
+    fputs("\e[?25h", stdout);
     cursor_hidden = false;
   }
   else {
-    printf("%c[?25l", ESC);
+    fputs("\e[?25l", stdout);
     cursor_hidden = true;
   }
   fflush(stdout);
@@ -89,14 +111,14 @@ void Console::showCursor(bool on) {
 void Console::clear() {
   printf("%c[2J", ESC);
   fflush(stdout);
-  this->row = this->col = 0;
+  this->moveTo(0, 0);
 }
 
 /** @public **/
 void Console::reset() {
   this->set_mode(ATTR_OFF, true);
   this->background = this->foreground = 0;
-  this->showCursor();
+  this->show_cursor(true);
 }
 
 /** @public **/
@@ -126,6 +148,7 @@ void Console::set_mode(uint8_t attr, bool on) {
     case ATTR_OFF:
       this->bold = this->underscore = this->blink = this->inverse =
           this->concealed = false;
+      this->show_cursor(!this->cursor_hidden);
       break;
     case ATTR_BOLD:
       this->bold = on;

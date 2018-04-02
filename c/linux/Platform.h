@@ -1,11 +1,13 @@
 #ifndef PLATFORM_H
 #define PLATFORM_H
 
+//
 class Platform {
 public:
-  int refresh_time;
+  uint16_t refresh_time;
   double loadavg[3];
   utsname info;
+  uint64_t uptime, idle;
 
 public:
   Platform();
@@ -13,7 +15,7 @@ public:
 public:
   void sleep();
   void update();
-  void print();
+  uint16_t print(bool test);
 };
 
 extern Platform platform;

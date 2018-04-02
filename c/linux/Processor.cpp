@@ -2,6 +2,8 @@
 
 Processor processor;
 
+static bool initialized = false;
+
 static char *u = nullptr;
 static char *ucstring(const char *s) {
   if (u) {
@@ -13,6 +15,7 @@ static char *ucstring(const char *s) {
   for (size_t i = 0; i < len; i++) {
     u[i] = toupper(int(s[i]));
   }
+  u[len] = '\0';
   return u;
 }
 
@@ -29,72 +32,50 @@ void CPU::diff(CPU *newer, CPU *older) {
 void CPU::print() {
   double total = this->user + this->system + this->nice + this->idle +
                  this->iowait + this->irq + this->softirq;
-  printf("%-6s %6.1f %6.1f %6.1f %6.1f %6.1f %6.1f %6.1f\n",
-         ucstring(this->name), 100 * this->user / total,
-         100 * this->system / total, 100 * this->nice / total,
-         100 * this->idle / total, 100 * this->iowait / total,
-         100 * this->irq / total, 100 * this->softirq / total);
+
+  if (total) {
+    console.println("%-6s %6.1f%% %6.1f%% %6.1f%% %6.1f%% %6.1f%% %6.1f%% %6.1f%%",
+           ucstring(this->name), 100 * this->user / total,
+           100 * this->system / total, 100 * this->nice / total,
+           100 * this->idle / total, 100 * this->iowait / total,
+           100 * this->irq / total, 100 * this->softirq / total);
+  }
+  else {
+    console.println("%-6s %6.1f%% %6.1f%% %6.1f%% %6.1f%% %6.1f%% %6.1f%% %6.1f%%",
+           ucstring(this->name), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  }
 }
 
 Processor::Processor() {
-  std::map<std::string, CPU *> last, current, delta;
+  this->condensed = false;
   this->num_cores = this->read(this->current);
   this->copy(this->last, this->current);
   this->copy(this->delta, this->current);
+  this->update();
+  initialized = true;
 }
 
-int Processor::read(std::map<std::string, CPU *> &m) {
-  int count = 0;
-  FILE *fp = fopen("/proc/stat", "r");
-  char *line = nullptr;
-  size_t len = 0;
-  while (getline(&line, &len, fp) >= 0) {
-    Line l = Line(line);
-    const char *token = l.get_token();
+uint16_t Processor::read(std::map<std::string, CPU *> &m) {
+  uint16_t count = 0;
+  Parser p("/proc/stat");
+  while (p.next()) {
+    const char *token = p.get_token();
     if (!strncmp(token, "cpu", 3)) {
       count++;
       CPU *cpu = m[token];
       if (!cpu) {
         cpu = m[token] = new CPU;
-        cpu->name = token;
+        cpu->name = strdup(token);
       }
-      else {
-        delete[] token;
-      }
-      token = l.get_token();
-      cpu->user = atol(token);
-      delete[] token;
-
-      token = l.get_token();
-      cpu->nice = atol(token);
-      delete[] token;
-
-      token = l.get_token();
-      cpu->system = atol(token);
-      delete[] token;
-
-      token = l.get_token();
-      cpu->idle = atol(token);
-      delete[] token;
-
-      token = l.get_token();
-      cpu->iowait = atol(token);
-      delete[] token;
-
-      token = l.get_token();
-      cpu->irq = atol(token);
-      delete[] token;
-
-      token = l.get_token();
-      cpu->softirq = atol(token);
-      delete[] token;
-
-      //        cpu->print();
+      cpu->user = p.get_long();
+      cpu->nice = p.get_long();
+      cpu->system = p.get_long();
+      cpu->idle = p.get_long();
+      cpu->iowait = p.get_long();
+      cpu->irq = p.get_long();
+      cpu->softirq = p.get_long();
     }
-    line = nullptr;
-    len = 0;
   }
-  fclose(fp);
   return count;
 }
 
@@ -129,26 +110,23 @@ void Processor::update() {
   }
 }
 
-void Processor::print() {
-  console.inverseln("%6s", "CPU STATES");
-  console.inverseln("%6s %6s %6s %6s %6s %6s %6s %6s", "", "user", "sys",
-                    "nice", "idle", "iowait", "irq", "softirq");
-
-#if 0
-    printf("LAST\n");
-    for (const auto &kv : this->last) {
-      CPU *cpu = (CPU *)kv.second;
-      cpu->print();
-    }
-    printf("CURRENT\n");
-    for (const auto &kv : this->current) {
-      CPU *cpu = (CPU *)kv.second;
-      cpu->print();
-    }
-#endif
+uint16_t Processor::print(bool test) {
+  uint16_t count = 0;
+  if (!test) {
+    console.inverseln("%-6s %7s %7s %7s %7s %7s %7s %7s", "CPUS", "User",
+                      "System", "Nice", "Idle", "IOWait", "IRQ", "SoftIRQ");
+  }
+  count++;
 
   for (const auto &kv : this->delta) {
     CPU *cpu = (CPU *)kv.second;
-    cpu->print();
+    if (!test) {
+      cpu->print();
+    }
+    count++;
+    if (this->condensed) {
+      break;
+    }
   }
+  return count;
 }

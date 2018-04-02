@@ -3,7 +3,7 @@
 
 struct CPU {
   const char *name;
-  unsigned long user, nice, system, idle, iowait, irq, softirq;
+  uint64_t user, nice, system, idle, iowait, irq, softirq;
 
 public:
   void diff(CPU *newer, CPU *older);
@@ -11,7 +11,10 @@ public:
 };
 
 struct Processor {
-  int num_cores;
+public:
+  bool condensed;
+  uint16_t num_cores;
+private:
   std::map<std::string, CPU *> last, current, delta;
 
 public:
@@ -19,11 +22,11 @@ public:
 
 public:
   // returns # of processors
-  int read(std::map<std::string, CPU *> &m);
+  uint16_t read(std::map<std::string, CPU *> &m);
   void copy(std::map<std::string, CPU *> &dst,
             std::map<std::string, CPU *> &src);
   void update();
-  void print();
+  uint16_t print(bool test);
 };
 
 extern Processor processor;

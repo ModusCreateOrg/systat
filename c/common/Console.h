@@ -13,7 +13,7 @@
 
 class Console {
 private:
-  int width, height;
+  bool aborting;
   // ciuror location
   uint8_t row, col;
   // modes
@@ -23,15 +23,21 @@ private:
   uint8_t background, foreground;
 
 public:
+  int width, height;
+
+public:
   Console();
   ~Console();
+
+public:
+  void abort(const char *fmt, ...);
 
 public:
   void resize();
 
 public:
   // enable/disable cursor
-  void showCursor(bool on = true);
+  void show_cursor(bool on = true);
 
   // clear screen
   void clear();

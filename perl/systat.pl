@@ -352,7 +352,7 @@ sub PrintDisk {
   	$in =~ s/^\s+//g;
   	(@arr) = split(/\s+/, $in);
  		$drive = $arr[2];
-  	next if ($drive =~ /\d$/ || $arr[3] == 0);
+    next if ($drive =~ /p\d$/ || $arr[3] == 0);
 	  $scr->at($row++,0);
 	  $scr->bold();
 	  printf("%-16.16s", "/dev/" . $drive);
