@@ -51,7 +51,7 @@ void Platform::update() {
     kinfo_proc *p = &this->kp[0];
     printf("%d\n", p->kp_proc.p_stat);
   }
-  printf("%d\n", length/sizeof(kinfo_proc));
+  printf("%lu\n", length/sizeof(kinfo_proc));
   // ? (int)(length/sizeof(kinfo_proc)) : (int)-1;
 
 }

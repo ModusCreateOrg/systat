@@ -5,7 +5,7 @@
 #ifndef C_CONSOLE_H
 #define C_CONSOLE_H
 
-#include <systat.h>
+//#include <systat.h>
 
 class Console {
 private:

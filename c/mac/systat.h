@@ -27,7 +27,7 @@
 #include <locale.h>
 #include <assert.h>
 
-#include "Console.h"
+#include "../common/Console.h"
 #include "Platform.h"
 #include "Processor.h"
 #include "Memory.h"
