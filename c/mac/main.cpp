@@ -77,7 +77,7 @@ int render(bool test) {
 void fit() {
   condensed = false;
   processor.condensed = false;
-  uint16_t h          = render(true);
+  uint16_t h = render(true);
   if (h <= console.height) {
     return;
   }

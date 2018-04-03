@@ -16,6 +16,12 @@
  * 5) System is Network bound
  *
  * To exit, hit ^C.
+ *
+ * This source is based upon httpL//github.com/sklinkert/mac-iostat
+ * which is based upon Apple's iostat.c
+ * which is based upon BSD's iostat.c
+ *
+ * See copyright info in iostat.txt.
  */
 #ifndef SYSTAT_DISK_H
 #define SYSTAT_DISK_H
