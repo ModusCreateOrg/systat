@@ -1,37 +1,23 @@
+/*
+ * systat for MacOS
+ *
+ * Programmed by Mike Schwartz <mike@moduscreate.com>
+ *
+ * Command line tool that refreshes the terminal/console window each second,
+ * showing uptime, load average, CPU usage/stats, Memory/Swap usage, Disk
+ * Activity (per drive/device), Virtual Memory activity (paging/swapping), and
+ * Network traffic (per interface).
+ *
+ * Run this on a busy system and you can diagnose if:
+ * 1) System is CPU bound
+ * 2) System is RAM bound
+ * 3) System is Disk bound
+ * 4) System is Paging/Swapping heavily
+ * 5) System is Network bound
+ *
+ * To exit, hit ^C.
+ */
 #include "systat.h"
-
-#if 0
-CPU::CPU(int id, uint *cpu_ticks) {
-  this->id = id;
-  this->current.system = this->last.system = cpu_ticks[CPU_STATE_SYSTEM];
-  this->current.user = this->last.user = cpu_ticks[CPU_STATE_USER];
-  this->current.nice = this->last.nice = cpu_ticks[CPU_STATE_NICE];
-  this->current.idle = this->last.idle = cpu_ticks[CPU_STATE_IDLE];
-}
-
-void CPU::update(uint *cpu_ticks) {
-  this->current.system = cpu_ticks[CPU_STATE_SYSTEM];
-  this->current.user = cpu_ticks[CPU_STATE_USER];
-  this->current.nice = cpu_ticks[CPU_STATE_NICE];
-  this->current.idle = cpu_ticks[CPU_STATE_IDLE];
-  this->delta.system = this->current.system - this->last.system;
-  this->delta.user = this->current.user - this->last.user;
-  this->delta.nice = this->current.nice - this->last.nice;
-  this->delta.idle = this->current.idle - this->last.idle;
-  this->last = this->current;
-}
-
-void CPUStats::print() {
-  uint64_t total = this->system + this->user + this->nice + this->idle;
-
-  double onePercent = total / 100.0f;
-
-  console.print("system: %'5.2f ", (double) this->system / (double) onePercent);
-  console.print("user:   %'5.2f ", (double) this->user / (double) onePercent);
-  console.print("nice:   %'5.2f ", (double) this->nice/ (double) onePercent);
-  console.println("idle: %'5.2f", (double) this->idle / (double) onePercent);
-}
-#endif
 
 void CPU::diff(CPU *newer, CPU *older) {
   this->user   = newer->user - older->user;
