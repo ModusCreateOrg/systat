@@ -17,6 +17,12 @@ add_executable(systat-linux
         linux/Platform.h
         linux/Processor.cpp
         linux/Processor.h
+        linux/Disk.cpp
+        linux/Disk.h
+        linux/VirtualMemory.cpp
+        linux/VirtualMemory.h
+        linux/Network.cpp
+        linux/Network.h
         linux/systat.h
         )
 add_executable(systat-mac
