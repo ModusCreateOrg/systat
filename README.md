@@ -1,7 +1,7 @@
 # systat
 __Real-Time System Status for Mac/Linux.__
 
-![Screenshot](https://github.com/mschwartz/systat/raw/master/images/screenshot.png)
+![Screenshot](./raw/master/images/screenshot.png)
 
 ## Overview
 This program refreshes the console/terminal/screen once per second and prints
