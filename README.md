@@ -3,6 +3,9 @@ __Real-Time System Status for Mac/Linux.__
 
 ![Screenshot](../../raw/master/images/screenshot.png)
 
+Screen shot of i3wm on Linux.  Three consoles/terminals in the left column, each 
+running systat on a different host.  The middle host/systat is a MacOS host.
+
 ## Overview
 This program refreshes the console/terminal/screen once per second and prints
 useful information about the system resources.  Displayed are:
