@@ -41,22 +41,24 @@ add_executable(systat-mac
         mac/Processor.h
         mac/systat.h mac/Disk.cpp mac/Disk.h mac/VirtualMemory.cpp mac/VirtualMemory.h)
 
-find_library(carbon_lib Carbon) # we look for the Carbon framework and use carbon_lib as an alias for it
-find_library(iokit_lib IOKit)
-find_library(forcefeedback_lib ForceFeedback)
-find_library(cocoa_lib Cocoa)
-find_library(audiounit_lib AudioUnit)
-find_library(coreaudio_lib CoreAudio)
-find_library(opengl_lib OpenGL)
-find_library(corefoundation_lib CoreFoundation)
-set(frameworks
-        ${carbon_lib}
-        ${iokit_lib}
-        ${forcefeedback_lib}
-        ${cocoa_lib}
-        ${audiounit_lib}
-        ${coreaudio_lib}
-        ${opengl_lib}
-        ${corefoundation_lib})
+if (apple)
+    find_library(carbon_lib Carbon) # we look for the Carbon framework and use carbon_lib as an alias for it
+    find_library(iokit_lib IOKit)
+    find_library(forcefeedback_lib ForceFeedback)
+    find_library(cocoa_lib Cocoa)
+    find_library(audiounit_lib AudioUnit)
+    find_library(coreaudio_lib CoreAudio)
+    find_library(opengl_lib OpenGL)
+    find_library(corefoundation_lib CoreFoundation)
+    set(frameworks
+            ${carbon_lib}
+            ${iokit_lib}
+            ${forcefeedback_lib}
+            ${cocoa_lib}
+            ${audiounit_lib}
+            ${coreaudio_lib}
+            ${opengl_lib}
+            ${corefoundation_lib})
 
-target_link_libraries(systat-mac ${frameworks})
+    target_link_libraries(systat-mac ${frameworks})
+endif ()
