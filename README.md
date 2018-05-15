@@ -152,4 +152,9 @@ you can "tail -f" to see debug output.  Logger.println(FORMAT, ...) to print
 debugging to the log file.
 
 ## License
+MIT License
+
+## Credits
+Programmed by Mike Schwartz for Modus Create.  
+https://moduscreate.com
 
