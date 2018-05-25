@@ -4,7 +4,6 @@ o/
 *.a
 .depend
 systat
-cmake-build*
 .idea
 CMakefiles/
 cmake_install.cmake
