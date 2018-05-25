@@ -1,19 +1,32 @@
-//
-// Created by Michael Schwartz on 3/21/18.
-//
+/*
+ * systat for MacOS and Linux
+ *
+ * Programmed by Mike Schwartz <mike@moduscreate.com>
+ *
+ * Command line tool that refreshes the terminal/console window each second,
+ * showing uptime, load average, CPU usage/stats, Memory/Swap usage, Disk
+ * Activity (per drive/device), Virtual Memory activity (paging/swapping), and
+ * Network traffic (per interface).
+ *
+ * Run this on a busy system and you can diagnose if:
+ * 1) System is CPU bound
+ * 2) System is RAM bound
+ * 3) System is Disk bound
+ * 4) System is Paging/Swapping heavily
+ * 5) System is Network bound
+ *
+ * To exit, hit ^C.
+ */
 
 // General purpose console class
+// Uses ANSI escape sequences to all for interactive console UI.
+// Does not rely on any dependency, such as curses/ncurses (that's the point!)
 
 #include "Console.h"
 #include <signal.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <unistd.h>
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <string.h>
-//#include <sys/ioctl.h>
-//#include <sys/types.h>
 
 const char ESC = 0x1b;
 

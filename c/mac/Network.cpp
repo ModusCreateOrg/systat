@@ -1,38 +1,33 @@
+/*
+ * This source is based upon httpL//github.com/sklinkert/mac-iostat
+ * which is based upon Apple's iostat.c
+ * which is based upon BSD's iostat.c
+ *
+ * See copyright info in iostat.txt.
+ */
+
+/*
+ * systat for MacOS
+ *
+ * Programmed by Mike Schwartz <mike@moduscreate.com>
+ *
+ * Command line tool that refreshes the terminal/console window each second,
+ * showing uptime, load average, CPU usage/stats, Memory/Swap usage, Disk
+ * Activity (per drive/device), Virtual Memory activity (paging/swapping), and
+ * Network traffic (per interface).
+ *
+ * Run this on a busy system and you can diagnose if:
+ * 1) System is CPU bound
+ * 2) System is RAM bound
+ * 3) System is Disk bound
+ * 4) System is Paging/Swapping heavily
+ * 5) System is Network bound
+ *
+ * To exit, hit ^C.
+ */
 #include "systat.h"
 
 Network network;
-
-#if 0
-Interface::Interface(std::string name, uint8_t *mac, if_msghdr2 *if2m) {
-  const if_data64 *data = &if2m->ifm_data;
-  this->name = name;
-  memcpy(this->mac, mac, 6);
-  this->type             = data->ifi_type;
-  this->flags            = if2m->ifm_flags;
-  this->speed            = data->ifi_baudrate;
-  this->stats.packetsIn  = this->statsDelta.packetsIn  = data->ifi_ipackets;
-  this->stats.packetsOut = this->statsDelta.packetsOut = data->ifi_opackets;
-  this->stats.bytesIn    = this->statsDelta.bytesIn    = data->ifi_ibytes;
-  this->stats.bytesOut   = this->statsDelta.bytesOut   = data->ifi_obytes;
-}
-
-void Interface::update(if_data64 *data) {
-  this->statsDelta.packetsIn  = data->ifi_ipackets - this->stats.packetsIn;
-  this->statsDelta.packetsOut = data->ifi_opackets - this->stats.packetsOut;
-  this->statsDelta.bytesIn    = data->ifi_ibytes - this->stats.bytesIn;
-  this->statsDelta.bytesOut   = data->ifi_obytes - this->stats.bytesOut;
-
-  this->stats.packetsIn  = data->ifi_ipackets;
-  this->stats.packetsOut = data->ifi_opackets;
-  this->stats.bytesIn    = data->ifi_ibytes;
-  this->stats.bytesOut   = data->ifi_obytes;
-}
-
-void Interface::print() {
-  console.print("%-10s %'13lld %'13lld %'13lld %'13lld\n", this->name.c_str(), this->stats.packetsIn / 1024,
-                this->stats.packetsOut / 1024, this->stats.bytesIn / 1024, this->stats.bytesOut / 1024);
-}
-#endif
 
 void Interface::diff(Interface *newer, Interface *older) {
   this->packetsIn  = newer->packetsIn - older->packetsIn;
