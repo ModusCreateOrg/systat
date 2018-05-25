@@ -123,5 +123,3 @@ uint16_t Platform::print(bool test) {
 }
 
 Platform platform;
-Platform platform;
-

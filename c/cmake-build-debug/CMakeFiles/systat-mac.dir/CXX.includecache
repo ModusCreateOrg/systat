@@ -45,13 +45,13 @@ Disk.h
 /Users/mschwartz/github/mschwartz/systat/c/mac/Disk.h
 CoreFoundation/CoreFoundation.h
 -
+IOKit/IOBSD.h
+-
 IOKit/IOKitLib.h
 -
 IOKit/storage/IOBlockStorageDriver.h
 -
 IOKit/storage/IOMedia.h
--
-IOKit/IOBSD.h
 -
 
 /Users/mschwartz/github/mschwartz/systat/c/mac/Disk.h
@@ -79,9 +79,9 @@ string
 /Users/mschwartz/github/mschwartz/systat/c/mac/Platform.cpp
 systat.h
 /Users/mschwartz/github/mschwartz/systat/c/mac/systat.h
-sys/utsname.h
--
 libproc.h
+-
+sys/utsname.h
 -
 
 /Users/mschwartz/github/mschwartz/systat/c/mac/Platform.h
