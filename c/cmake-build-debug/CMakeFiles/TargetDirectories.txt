@@ -1,0 +1,4 @@
+/Users/mschwartz/github/mschwartz/systat/c/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/mschwartz/github/mschwartz/systat/c/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/mschwartz/github/mschwartz/systat/c/cmake-build-debug/CMakeFiles/systat-mac.dir
+/Users/mschwartz/github/mschwartz/systat/c/cmake-build-debug/CMakeFiles/systat-linux.dir

@@ -5,7 +5,6 @@ o/
 .depend
 systat
 .idea
-CMakefiles/
 cmake_install.cmake
 *.cbp
 core
