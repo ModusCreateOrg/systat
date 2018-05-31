@@ -34,7 +34,7 @@ Line::~Line() {
   if (this->line) {
     delete this->line;
   }
-  this->line = nullptr;
+  this->line = NULL;
 }
 
 const char *Line::get_token() {
@@ -42,7 +42,7 @@ const char *Line::get_token() {
     this->token++;
   }
   if (*this->token == '\0') {
-    return nullptr;
+    return NULL;
   }
   char *ptr = this->token;
   while (*ptr && *ptr != ' ') {
@@ -58,8 +58,8 @@ const char *Line::get_token() {
 
 Parser::Parser(const char *filename) {
   this->filename = strdup(filename);
-  this->line = nullptr;
-  this->token = nullptr;
+  this->line = NULL;
+  this->token = NULL;
 
   this->fp = fopen(filename, "r");
   if (!this->fp) {
@@ -72,24 +72,24 @@ Parser::~Parser() {
   delete this->filename;
   if (this->line) {
     delete this->line;
-    this->line = nullptr;
+    this->line = NULL;
   }
   if (this->token) {
     delete this->token;
-    this->token = nullptr;
+    this->token = NULL;
   }
   if (this->fp) {
     fclose(this->fp);
   }
-  this->fp = nullptr;
+  this->fp = NULL;
 }
 
 bool Parser::next() {
   if (this->line) {
     delete this->line;
-    this->line = nullptr;
+    this->line = NULL;
   }
-  char *in = nullptr;
+  char *in = NULL;
   size_t len = 0;
   if (getline(&in, &len, this->fp) >= 0) {
     this->line = new Line(in);
@@ -101,10 +101,10 @@ bool Parser::next() {
 const char *Parser::get_token() {
   if (this->token) {
     delete this->token;
-    this->token = nullptr;
+    this->token = NULL;
   }
   if (!this->line) {
-    return nullptr;
+    return NULL;
   }
   return this->token = this->line->get_token();
 }

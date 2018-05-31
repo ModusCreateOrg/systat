@@ -43,7 +43,7 @@ Platform::Platform() {
   assert(status == KERN_SUCCESS);
   this->cpu_count = static_cast<uint64_t>(cpuCount);
 
-  utsname buf{};
+  utsname buf;
   uname(&buf);
 
   this->hostname = strdup(buf.nodename);

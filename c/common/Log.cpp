@@ -25,7 +25,7 @@
 
 Log logger;
 
-static FILE *fp = nullptr;
+static FILE *fp = NULL;
 Log::Log() {
   fp = fopen("/tmp/systat.log", "w");
   if (!fp) {

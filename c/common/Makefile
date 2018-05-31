@@ -3,7 +3,7 @@ OBJ=	Console.o Log.o Parser.o
 .cpp.o:
 	g++ -c -o $*.o $*.cpp -DDEBUG=$(DEBUG)
 
-libcommon.a: depend $(OBJ) Console.h
+libcommon.a: .depend $(OBJ) Console.h
 	ar r libcommon.a $(OBJ)
 
 clean:
@@ -11,8 +11,6 @@ clean:
 
 debug:
 	make clean && DEBUG=1 make
-
-depend: .depend
 
 .depend:	*.cpp
 	rm -f ./.depend
