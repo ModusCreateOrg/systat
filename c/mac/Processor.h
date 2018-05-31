@@ -23,18 +23,19 @@
 #include "systat.h"
 
 struct CPU {
-  int        id;
+  int id;
   const char *name;
-  uint64_t   user, nice, system, idle;
+  uint64_t user, nice, system, idle;
   void diff(CPU *newer, CPU *older);
   void print();
 };
 
 class Processor {
 public:
-  int                          num_cores;
-  bool                         condensed;
   std::map<std::string, CPU *> last, current, delta;
+  int num_cores;
+  bool condensed, pad[3];
+
 public:
   Processor();
 
@@ -52,4 +53,4 @@ public:
 
 extern Processor processor;
 
-#endif //C_CPU_H
+#endif // C_CPU_H

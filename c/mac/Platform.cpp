@@ -58,10 +58,10 @@ Platform::Platform() {
 void Platform::update() {
   getloadavg(this->loadavg, 3);
   size_t length = 0;
-  static const int names[] = { CTL_KERN, KERN_PROC, KERN_PROC_ALL, 0 };
+  static int names[] = { CTL_KERN, KERN_PROC, KERN_PROC_ALL, 0 };
   sysctl((int *)names, (sizeof(names) / sizeof(names[0])) - 1, nullptr, &length,
          nullptr, 0);
-  const char *buf = new char[length];
+  char *buf = new char[length];
   sysctl((int *)names, (sizeof(names) / sizeof(names[0])) - 1, (void *)buf,
          &length, nullptr, 0);
 
@@ -69,9 +69,9 @@ void Platform::update() {
 
   this->kp = (kinfo_proc *)buf;
   this->num_processes = length / sizeof(kinfo_proc);
-  for (int i = 0; i < this->num_processes; i++) {
-    kinfo_proc *p = &this->kp[0];
-  }
+//  for (int i = 0; i < this->num_processes; i++) {
+//    kinfo_proc *p = &this->kp[0];
+//  }
 }
 
 uint16_t Platform::print(bool test) {

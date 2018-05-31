@@ -37,20 +37,14 @@ added the networking information, which was absent in the Perl script.
 
 ## Building for MacOS
 
-The MacOS version was built using CLion from JetBrains.  The program uses a lot
-of core data structures from numerous system header files.  The CLion debugger
-was handy for its ability to inspect struct and class values.
-
-CLion is not required, though.
-
 You can build the MacOS version:
 ```
-cd c
-cmake --build ./cmake-build-debug --target systat-mac --
+cd c/mac
+make
 # to run it:
-./cmake-build-debug/systat-mac
+./systat
 # to install it:
-sudo install ./cmake-build-debug/systat-mac /usr/local/bin/systat
+sudo make install
 ```
 
 ## Building for Linux
@@ -64,19 +58,6 @@ make
 # to install it:
 make install
 ```
-
-The Linux version can be built using cmake:
-```
-cd c
-cmake --build ./cmake-build-debug --target systat-linux --
-# to run it:
-./cmake-build-debug/systat-linux
-# to install it:
-sudo install ./cmake-build-debug/systat-linux /usr/local/bin/systat
-```
-
-The Linux version can be built using CLion, too.  In CLion, open the c/
-directory and set target to systat-linux.
 
 ## How it works
 

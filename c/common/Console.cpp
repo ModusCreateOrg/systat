@@ -141,7 +141,7 @@ void Console::clear_eol() {
 }
 
 /** @public **/
-void Console::moveTo(uint8_t row, uint8_t col) {
+void Console::moveTo(uint16_t row, uint16_t col) {
   printf("%c[%d;%dH", ESC, row, col);
   fflush(stdout);
   this->row = row;

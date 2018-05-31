@@ -19,6 +19,9 @@
  */
 #include "systat.h"
 
+uint16_t render(bool);
+void fit(void);
+
 static bool alive = true, condensed = false;
 
 void sigint_handler(int) {
@@ -37,7 +40,7 @@ static uint16_t blank_line(uint16_t row, bool test) {
   return 1;
 }
 
-int render(bool test) {
+uint16_t render(bool test) {
   uint16_t y = 0;
 
   console.moveTo(y, 0);
@@ -74,7 +77,7 @@ int render(bool test) {
  * This is done by eliminating blank lines and hiding
  * detailed per CPU core stats, etc.
  */
-void fit() {
+void fit(void) {
   condensed = false;
   processor.condensed = false;
   uint16_t h = render(true);
@@ -89,7 +92,7 @@ void fit() {
   condensed = true;
 }
 
-int main(int ac, char *av[]) {
+int main(/*int ac, char *av[]*/) {
   signal(SIGINT, sigint_handler);
   setlocale(LC_NUMERIC, "");
   uint16_t last_height = 0;

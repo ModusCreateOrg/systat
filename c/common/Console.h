@@ -29,11 +29,15 @@
 #include <sys/ioctl.h>
 
 class Console {
+public:
+  // console window width and height
+  uint16_t width, height;
+
 private:
-  bool aborting;
+  bool aborting, pad;
 
   // ciuror location
-  uint8_t row, col;
+  uint16_t row, col;
 
   // modes
   bool bold, underscore, blink, inverse, concealed;
@@ -41,10 +45,6 @@ private:
 
   // colors
   uint8_t background, foreground;
-
-public:
-  // console window width and height
-  int width, height;
 
 public:
   Console();
@@ -73,7 +73,7 @@ public:
   void clear_eol();
 
   // address cursor
-  void moveTo(uint8_t row, uint8_t col);
+  void moveTo(uint16_t row, uint16_t col);
 
   // printf style output to terminal
   void print(const char *fmt, ...);

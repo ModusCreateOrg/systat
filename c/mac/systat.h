@@ -28,37 +28,38 @@
 #include <net/if_types.h>
 #include <net/if_var.h>
 #include <net/route.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdint.h>
+#include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <sys/sysctl.h>
 #include <sys/types.h>
-#include <sys/ioctl.h>
 
 #include <errno.h>
 #include <mach/mach_host.h>
 #include <netinet/in.h>
 #include <netinet/in_var.h>
-#include <unistd.h>
 #include <signal.h>
+#include <unistd.h>
 
-#include <locale.h>
 #include <assert.h>
+#include <locale.h>
 
-#include <string>
 #include <map>
+#include <string>
 
 #include "../common/Console.h"
 //#include "../common/Log.h"
-#include "Platform.h"
-#include "Processor.h"
+#include "Disk.h"
 #include "Memory.h"
 #include "Network.h"
-#include "Disk.h"
+#include "Platform.h"
+#include "Processor.h"
 #include "VirtualMemory.h"
 
 extern void printNetwork();
+extern void sigint_handler(int);
 
 #endif

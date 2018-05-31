@@ -21,19 +21,16 @@
 #ifndef C_PLATFORM_H
 #define C_PLATFORM_H
 
-
 class Platform {
 public:
-  uint16_t refresh_time;
-  uint64_t uptime, idle;
-  uint64_t num_processes, cpu_count;
-  double loadavg[3];
-  char *hostname,
-       *sysname,
-       *release,
-       *version,
-       *machine;
+  char *hostname, *sysname, *release, *version, *machine;
   kinfo_proc *kp;
+  uint64_t uptime, idle;
+  double loadavg[3];
+  uint64_t num_processes, cpu_count;
+  uint16_t refresh_time;
+  uint8_t pad[6];
+
 public:
   Platform();
 
@@ -44,4 +41,4 @@ public:
 
 extern Platform platform;
 
-#endif //C_PLATFORM_H
+#endif // C_PLATFORM_H

@@ -50,6 +50,7 @@ struct DiskStats {
 class Disk {
 public:
   uint16_t num_devices;
+  uint8_t pad[6];
 
 protected:
   std::map<std::string, DiskStats *> last, current, delta;
